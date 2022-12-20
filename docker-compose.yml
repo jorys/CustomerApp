@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  customerapp.restapi:
+    image: ${DOCKER_REGISTRY-}customerapprestapi
+    build:
+      context: .
+      dockerfile: CustomerApp.RestApi/Dockerfile
+  smtpdev:
+    image: "rnwood/smtp4dev:v3"
+    ports: 
+    - "3000:80"
+    - "2525:25"
