@@ -24,7 +24,7 @@ public sealed class ResetPasswordHandler
         _logger = logger;
     }
 
-    public async Task<ErrorOr<bool>> Handle(ResetPasswordCommand command)
+    public async Task<ErrorOr<Success>> Handle(ResetPasswordCommand command)
     {
         // Get reset password resource by email
         var errorOrEmail = Email.Create(command.Email);
@@ -57,7 +57,7 @@ public sealed class ResetPasswordHandler
         var customer = await _repository.GetCustomer(resetPasswordResource.Id);
         if (customer is null) return GetInvalidTokenError(new { customerId = resetPasswordResource.Id });
 
-        var errorOrCustomer = customer.ResetPassword(hashedPassword);
+        var errorOrCustomer = customer.UpdatePassword(hashedPassword);
         if (errorOrCustomer.IsError) return errorOrCustomer.Errors;
 
         // Save customer
@@ -66,7 +66,7 @@ public sealed class ResetPasswordHandler
         // Delete reset password resource
         await _repository.DeleteResetPasswordResource(resetPasswordResource.Id);
 
-        return true;
+        return new Success();
     }
 
     Error GetInvalidTokenError(object logAdditionnalProperties)

@@ -18,7 +18,7 @@ public sealed class FirstName : ValueObject
         {
             return Errors.IsRequired(nameof(FirstName));
         }
-        return new FirstName(value.FormatAsTitle());
+        return new FirstName(value.ToTitleCase());
     }
 
     public override IEnumerable<object> GetEqualityComponents()

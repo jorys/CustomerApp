@@ -73,7 +73,7 @@ public sealed class Customer : AggregateRoot<CustomerId>
         return this;
     }
 
-    public ErrorOr<Customer> ResetPassword(string hashedPassword)
+    public ErrorOr<Customer> UpdatePassword(string hashedPassword)
     {
         var errorOrHashedPassword = HashedPassword.Create(hashedPassword);
         if (errorOrHashedPassword.IsError) return errorOrHashedPassword.Errors;

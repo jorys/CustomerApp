@@ -32,7 +32,7 @@ public sealed class ForgotPasswordHandler
         _logger = logger;
     }
 
-    public async Task<ErrorOr<bool>> Handle(ForgotPasswordCommand command)
+    public async Task<ErrorOr<Success>> Handle(ForgotPasswordCommand command)
     {
         // Get customer by email
         var errorOrEmail = Email.Create(command.Email);
@@ -42,7 +42,7 @@ public sealed class ForgotPasswordHandler
         var customer = await _repository.GetCustomer(email);
         
         // If user does not exist, do nothing
-        if (customer is null) return true;
+        if (customer is null) return new Success();
 
         // Generate token
         var stringToken = _tokenGenerator.GenerateToken();
@@ -67,7 +67,7 @@ public sealed class ForgotPasswordHandler
         var success = await _emailSender.Send(email, token);
         if (!success) return Error.Unexpected("ForgotPassword.Email", "An error occurred while trying to send email.");
 
-        return true;
+        return new Success();
     }
 
     Error GetInvalidTokenError(object logAdditionnalProperties)

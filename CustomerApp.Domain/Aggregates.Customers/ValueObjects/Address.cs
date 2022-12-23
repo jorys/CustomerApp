@@ -7,7 +7,7 @@ namespace CustomerApp.Domain.Aggregates.Customers.ValueObjects;
 public sealed class Address : ValueObject
 {
     private const short _postCodeLength = 5;
-    private static readonly string[] _authorizedCountries = new[] { "france" };
+    private static readonly string[] _authorizedCountries = new[] { "France" };
 
     public string Street { get; }
     public string City { get; }
@@ -37,7 +37,7 @@ public sealed class Address : ValueObject
         {
             errors.Add(Errors.InvalidLength(nameof(PostCode), _postCodeLength));
         }
-        var formattedCountry = country.FormatAsTitle();
+        var formattedCountry = country.ToTitleCase();
         if (!_authorizedCountries.Contains(formattedCountry))
         {
             errors.Add(Errors.InvalidValue(nameof(Country), _authorizedCountries));

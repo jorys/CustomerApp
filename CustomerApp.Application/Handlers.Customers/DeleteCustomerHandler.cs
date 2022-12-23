@@ -15,7 +15,7 @@ public sealed class DeleteCustomerHandler
         _repository = repository;
     }
 
-    public async Task<ErrorOr<bool>> Handle(DeleteCustomerCommand command)
+    public async Task<ErrorOr<Success>> Handle(DeleteCustomerCommand command)
     {
         var errorOrCustomerId = CustomerId.Create(command.CustomerId);
         if (errorOrCustomerId.IsError) return errorOrCustomerId.Errors;
@@ -23,6 +23,6 @@ public sealed class DeleteCustomerHandler
         var customerId = errorOrCustomerId.Value;
         await _repository.DeleteCustomer(customerId);
 
-        return true;
+        return new Success();
     }
 }
