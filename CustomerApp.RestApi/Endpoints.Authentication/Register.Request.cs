@@ -6,11 +6,9 @@ namespace CustomerApp.RestApi.Endpoints.Authentication;
 public sealed record RegisterRequest
 {
     /// <example>Jorys</example>
-    [Required]
     public string FirstName { get; }
 
-    /// <example>Gaillard</example>
-    [Required]
+    /// <example>GAILLARD</example>
     public string LastName { get; }
 
     /// <example>2000-04-20</example>
@@ -21,10 +19,8 @@ public sealed record RegisterRequest
     public string Email { get; }
 
     /// <example>P@sSw0rD!</example>
-    [Required]
     public string Password { get; }
 
-    [Required]
     public AddressRequest Address { get; }
 
     public RegisterRequest(string firstName, string lastName, DateOnly birthdate, string email, string password, AddressRequest address)
@@ -40,19 +36,15 @@ public sealed record RegisterRequest
     public sealed record AddressRequest
     {
         /// <example>1 rue de la Garenne</example>
-        [Required]
         public string Street { get; }
 
         /// <example>Bruges</example>
-        [Required]
         public string City { get; }
 
         /// <example>33520</example>
-        [Required]
         public int PostCode { get; }
 
         /// <example>France</example>
-        [Required]
         public string Country { get; }
 
         public AddressRequest(string street, string city, int postCode, string country)

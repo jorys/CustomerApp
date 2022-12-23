@@ -6,7 +6,7 @@ using System.Net;
 
 namespace CustomerApp.Application.Handlers.Authentication;
 
-[Route("api/reset-password")]
+[Route($"{BaseUrl}/reset-password")]
 public sealed class ResetPassword : InternalControllerBase
 {
     readonly ResetPasswordHandler _commandHandler;
@@ -18,7 +18,7 @@ public sealed class ResetPassword : InternalControllerBase
     }
 
     [HttpPost]
-    [Tags("Authentication")]
+    [Tags(SwaggerTags.Authentication)]
     [SwaggerResponse((int)HttpStatusCode.NoContent)]
     [SwaggerResponse((int)HttpStatusCode.BadRequest)]
     [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
@@ -26,6 +26,7 @@ public sealed class ResetPassword : InternalControllerBase
     {
         var command = request.ToCommand();
         var errorOrAuthenticationResult = await _commandHandler.Handle(command);
+
         return ToActionResult(
             errorOrAuthenticationResult,
             authenticationResult => NoContent());

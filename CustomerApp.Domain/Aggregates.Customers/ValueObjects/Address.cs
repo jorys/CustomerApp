@@ -1,5 +1,6 @@
 ﻿using CustomerApp.Domain.Common;
 using ErrorOr;
+using System.Runtime.InteropServices;
 
 namespace CustomerApp.Domain.Aggregates.Customers.ValueObjects;
 
@@ -36,18 +37,27 @@ public sealed class Address : ValueObject
         {
             errors.Add(Errors.InvalidLength(nameof(PostCode), _postCodeLength));
         }
-        var formatedCountry = country.ToLowerInvariant();
-        if (!_authorizedCountries.Contains(formatedCountry))
+        var formattedCountry = country.FormatAsTitle();
+        if (!_authorizedCountries.Contains(formattedCountry))
         {
             errors.Add(Errors.InvalidValue(nameof(Country), _authorizedCountries));
         }
         if (errors.Any()) return errors;
 
         return new Address(
-            street: street.ToLowerInvariant(),
-            city: city.ToLowerInvariant(),
+            street: street,
+            city: city,
             postCode: postCode,
-            country: formatedCountry);
+            country: formattedCountry);
+    }
+
+    public ErrorOr<Address> With(string? street, string? city, int? postCode, string? country)
+    {
+        return Create(
+            street: street ?? Street,
+            city: city ?? City,
+            postCode: postCode ?? PostCode,
+            country: country ?? Country);
     }
 
     public override IEnumerable<object> GetEqualityComponents()

@@ -21,14 +21,16 @@ public static class DependencyRegistration
             var projectName = Assembly.GetExecutingAssembly().GetName().Name;
             var xmlCommentsFilePath = Path.Combine(AppContext.BaseDirectory, $"{projectName}.xml");
             options.IncludeXmlComments(xmlCommentsFilePath);
+            options.CustomSchemaIds(x => x?.FullName?.Split('.').Last().Replace("+", "."));
 
+            // JWT token
             options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
             {
                 Name = "Authorization",
                 Type = SecuritySchemeType.ApiKey,
                 In = ParameterLocation.Header,
                 Scheme = JwtBearerDefaults.AuthenticationScheme,
-                BearerFormat = "JWT",
+                BearerFormat = "JWT"
             });
             options.AddSecurityRequirement(new OpenApiSecurityRequirement
             {

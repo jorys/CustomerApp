@@ -14,6 +14,7 @@ if (!app.Environment.IsProduction())
     app.UseSwaggerUI();
 }
 app.UseExceptionHandler("/error");
+app.UseHsts();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

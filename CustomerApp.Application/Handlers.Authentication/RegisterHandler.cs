@@ -30,9 +30,7 @@ public sealed class RegisterHandler
         var password = errorOrPassword.Value;
 
         // Hash password
-        var errorOrHashedPassword = _passwordHasher.Hash(password);
-        if (errorOrHashedPassword.IsError) return errorOrHashedPassword.Errors;
-        var hashedPassword = errorOrHashedPassword.Value;
+        var hashedPassword = _passwordHasher.Hash(password);
 
         // Create customer with hashed password
         var errorOrCustomer = Customer.Create(
@@ -41,12 +39,11 @@ public sealed class RegisterHandler
             birthdate: command.Birthdate,
             email: command.Email,
             hashedPassword: hashedPassword,
-            Address.Create(
-                street: command.Address.Street,
-                city: command.Address.City,
-                postCode: command.Address.PostCode,
-                country: command.Address.Country
-        ));
+            street: command.Address.Street,
+            city: command.Address.City,
+            postCode: command.Address.PostCode,
+            country: command.Address.Country
+        );
         if (errorOrCustomer.IsError) return errorOrCustomer.Errors;
         var customer = errorOrCustomer.Value;
 

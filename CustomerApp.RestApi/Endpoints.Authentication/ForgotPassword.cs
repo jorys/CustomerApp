@@ -1,6 +1,5 @@
 ﻿using CustomerApp.Application.Handlers.Authentication;
 using CustomerApp.RestApi.Common;
-using CustomerApp.RestApi.Endpoints.Customers.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
@@ -8,7 +7,7 @@ using System.Net;
 
 namespace CustomerApp.RestApi.Endpoints.Authentication;
 
-[Route("api/forgot-password")]
+[Route($"{BaseUrl}/forgot-password")]
 public sealed class ForgotPassword : InternalControllerBase
 {
     readonly ForgotPasswordHandler _commandHandler;
@@ -20,7 +19,7 @@ public sealed class ForgotPassword : InternalControllerBase
     }
 
     [HttpPost]
-    [Tags("Authentication")]
+    [Tags(SwaggerTags.Authentication)]
     [SwaggerResponse((int)HttpStatusCode.NoContent)]
     [SwaggerResponse((int)HttpStatusCode.BadRequest)]
     [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
@@ -28,6 +27,7 @@ public sealed class ForgotPassword : InternalControllerBase
     {
         var command = request.ToCommand();
         var errorOrAuthenticationResult = await _commandHandler.Handle(command);
+
         return ToActionResult(
             errorOrAuthenticationResult,
             authenticationResult => NoContent());

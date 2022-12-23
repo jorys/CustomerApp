@@ -9,13 +9,13 @@ namespace CustomerApp.Domain.Aggregates.Customers;
 public sealed class Customer : AggregateRoot<CustomerId>
 {
     public override CustomerId Id { get; }
-    public FirstName FirstName { get; }
-    public LastName LastName { get; }
-    public Birthdate Birthdate { get; }
-    public Email Email { get; }
+    public FirstName FirstName { get; private set; }
+    public LastName LastName { get; private set; }
+    public Birthdate Birthdate { get; private set; }
+    public Email Email { get; private set; }
     public HashedPassword HashedPassword { get; private set; }
     public CustomerStatus Status { get; private set; }
-    public Address Address { get; }
+    public Address Address { get; private set; }
 
     Customer(CustomerId customerId, FirstName firstName, LastName lastName, Birthdate birthdate, Email email, HashedPassword hashedPassword, CustomerStatus status, Address address) : base(customerId)
     {
@@ -29,9 +29,9 @@ public sealed class Customer : AggregateRoot<CustomerId>
         Address = address;
     }
 
-    public static ErrorOr<Customer> Create(string firstName, string lastName, DateOnly birthdate, string email, HashedPassword hashedPassword, ErrorOr<Address> errorOrAddress)
+    public static ErrorOr<Customer> Create(string firstName, string lastName, DateOnly birthdate, string email, string hashedPassword, string street, string city, int postCode, string country)
     {
-        var errors = new List<Error>(6);
+        var errors = new List<Error>(9);
 
         var errorOrFirstName = FirstName.Create(firstName);
         if (errorOrFirstName.IsError) errors.AddRange(errorOrFirstName.Errors);
@@ -45,9 +45,10 @@ public sealed class Customer : AggregateRoot<CustomerId>
         var errorOrEmail = Email.Create(email);
         if (errorOrEmail.IsError) errors.AddRange(errorOrEmail.Errors);
 
-        var errorOrHashedPassword = HashedPassword.Create(hashedPassword.Value);
+        var errorOrHashedPassword = HashedPassword.Create(hashedPassword);
         if (errorOrHashedPassword.IsError) errors.AddRange(errorOrHashedPassword.Errors);
 
+        var errorOrAddress = Address.Create(street: street, city: city, postCode: postCode, country: country);
         if (errorOrAddress.IsError) errors.AddRange(errorOrAddress.Errors);
 
         if (errors.Any()) return errors;
@@ -72,9 +73,49 @@ public sealed class Customer : AggregateRoot<CustomerId>
         return this;
     }
 
-    public Customer ResetPassword(HashedPassword hashedPassword)
+    public ErrorOr<Customer> ResetPassword(string hashedPassword)
     {
-        HashedPassword = hashedPassword;
+        var errorOrHashedPassword = HashedPassword.Create(hashedPassword);
+        if (errorOrHashedPassword.IsError) return errorOrHashedPassword.Errors;
+
+        HashedPassword = errorOrHashedPassword.Value;
         return this;
+    }
+
+    public ErrorOr<Customer> Update(string? firstName, string? lastName, DateOnly? birthdate, string? email, string? street, string? city, int? postCode, string? country)
+    {
+        var errors = new List<Error>(8);
+
+        if (firstName is not null)
+        {
+            var errorOrFirstName = FirstName.Create(firstName);
+            if (errorOrFirstName.IsError) errors.AddRange(errorOrFirstName.Errors);
+            else FirstName = errorOrFirstName.Value;
+        }
+        if (lastName is not null)
+        {
+            var errorOrLastName = LastName.Create(lastName);
+            if (errorOrLastName.IsError) errors.AddRange(errorOrLastName.Errors);
+            else LastName = errorOrLastName.Value;
+        }
+        if (birthdate is not null)
+        {
+            var errorOrBirthdate = Birthdate.Create(birthdate.Value);
+            if (errorOrBirthdate.IsError) errors.AddRange(errorOrBirthdate.Errors);
+            else Birthdate = errorOrBirthdate.Value;
+        }
+        if (email is not null)
+        {
+            var errorOrEmail = Email.Create(email);
+            if (errorOrEmail.IsError) errors.AddRange(errorOrEmail.Errors);
+            else Email = errorOrEmail.Value;
+        }
+
+        var errorOrAddress = Address.With(street: street, city: city, postCode: postCode, country: country);
+        if (errorOrAddress.IsError) errors.AddRange(errorOrAddress.Errors);
+        else Address = errorOrAddress.Value;
+
+        if (errors.Any()) return errors;
+        else return this;
     }
 }

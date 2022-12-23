@@ -8,6 +8,8 @@ namespace CustomerApp.RestApi.Common;
 [ApiController]
 public abstract class InternalControllerBase : ControllerBase
 {
+    protected const string BaseUrl = "api";
+
     readonly ApiBehaviorOptions _apiBehaviorOptions;
 
     protected InternalControllerBase(IOptions<ApiBehaviorOptions> apiBehaviorOptions)

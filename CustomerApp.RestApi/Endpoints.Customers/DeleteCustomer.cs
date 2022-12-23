@@ -8,8 +8,7 @@ using System.Net;
 
 namespace CustomerApp.RestApi.Endpoints.Customers;
 
-[ApiController]
-[Route("api/customer")]
+[Route($"{BaseUrl}/customer")]
 public sealed class DeleteCustomer : AuthenticatedControllerBase
 {
     readonly DeleteCustomerHandler _commandHandler;
@@ -21,7 +20,7 @@ public sealed class DeleteCustomer : AuthenticatedControllerBase
     }
 
     [HttpDelete]
-    [Tags("Customer")]
+    [Tags(SwaggerTags.Customer)]
     [SwaggerResponse((int)HttpStatusCode.NoContent)]
     [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
     [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
@@ -29,6 +28,7 @@ public sealed class DeleteCustomer : AuthenticatedControllerBase
     {
         var command = new DeleteCustomerCommand(CustomerId: CustomerId);
         var errorOrSuccess = await _commandHandler.Handle(command);
+
         return ToActionResult(
             errorOrSuccess, 
             result => NoContent());

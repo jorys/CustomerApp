@@ -51,15 +51,14 @@ public sealed class ResetPasswordHandler
         if (errorOrPassword.IsError) return errorOrPassword.Errors;
         var password = errorOrPassword.Value;
 
-        var errorOrHashedPassword = _passwordHasher.Hash(password);
-        if (errorOrHashedPassword.IsError) return errorOrHashedPassword.Errors;
-        var hashedPassword = errorOrHashedPassword.Value;
+        var hashedPassword = _passwordHasher.Hash(password);
 
         // Update customer password
         var customer = await _repository.GetCustomer(resetPasswordResource.Id);
         if (customer is null) return GetInvalidTokenError(new { customerId = resetPasswordResource.Id });
 
-        customer.ResetPassword(hashedPassword);
+        var errorOrCustomer = customer.ResetPassword(hashedPassword);
+        if (errorOrCustomer.IsError) return errorOrCustomer.Errors;
 
         // Save customer
         await _repository.Save(customer);

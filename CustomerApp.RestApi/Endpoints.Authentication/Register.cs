@@ -10,7 +10,7 @@ using System.Net;
 namespace CustomerApp.RestApi.Endpoints.Authentication;
 
 [ApiController]
-[Route("api/register")]
+[Route($"{BaseUrl}/register")]
 public sealed class Register : InternalControllerBase
 {
     readonly RegisterHandler _commandHandler;
@@ -22,7 +22,7 @@ public sealed class Register : InternalControllerBase
     }
 
     [HttpPost]
-    [Tags("Authentication")]
+    [Tags(SwaggerTags.Authentication)]
     [SwaggerResponse((int)HttpStatusCode.OK, type: typeof(AuthenticationResponse))]
     [SwaggerResponse((int)HttpStatusCode.BadRequest)]
     [SwaggerResponse((int)HttpStatusCode.InternalServerError)]

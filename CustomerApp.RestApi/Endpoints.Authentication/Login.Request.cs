@@ -10,7 +10,6 @@ public sealed record LoginRequest
     public string Email { get; }
 
     /// <example>P@sSw0rD!</example>
-    [Required]
     public string Password { get; }
 
     public LoginRequest(string email, string password)

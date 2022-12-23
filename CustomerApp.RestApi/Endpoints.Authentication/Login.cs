@@ -9,7 +9,7 @@ using System.Net;
 
 namespace CustomerApp.RestApi.Endpoints.Authentication;
 
-[Route("api/login")]
+[Route($"{BaseUrl}/login")]
 public sealed class Login : InternalControllerBase
 {
     readonly LoginHandler _commandHandler;
@@ -21,7 +21,7 @@ public sealed class Login : InternalControllerBase
     }
 
     [HttpPost]
-    [Tags("Authentication")]
+    [Tags(SwaggerTags.Authentication)]
     [SwaggerResponse((int)HttpStatusCode.OK, type: typeof(AuthenticationResponse))]
     [SwaggerResponse((int)HttpStatusCode.BadRequest)]
     [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
@@ -29,6 +29,7 @@ public sealed class Login : InternalControllerBase
     {
         var command = request.ToCommand();
         var errorOrAuthenticationResult = await _commandHandler.Handle(command);
+
         return ToActionResult(
             errorOrAuthenticationResult, 
             authenticationResult => Ok(AuthenticationResponse.From(authenticationResult)));

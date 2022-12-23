@@ -1,6 +1,6 @@
 ﻿using CustomerApp.Application.Handlers.Customers.Models;
 using CustomerApp.Application.Interfaces;
-using CustomerApp.Domain;
+using CustomerApp.Domain.Aggregates.Customers;
 using CustomerApp.Domain.ValueObjects;
 using ErrorOr;
 
@@ -15,22 +15,32 @@ public sealed class UpdateCustomerHandler
         _repository = repository;
     }
 
-    public async Task<List<Error>> Handle(UpdateCustomerCommand command)
+    public async Task<ErrorOr<Customer>> Handle(UpdateCustomerCommand command)
     {
-        // TODO
+        // Get customer
         var errorOrCustomerId = CustomerId.Create(command.CustomerId);
         if (errorOrCustomerId.IsError) return errorOrCustomerId.Errors;
 
         var customerId = errorOrCustomerId.Value;
         var customer = await _repository.GetCustomer(customerId);
 
-        if (customer is null)
-        {
-            return new List<Error> { Error.NotFound(
-                "CustomerId.NotFound",
-                "No customer was found with this customer id.") };
-        }
+        if (customer is null) return Error.NotFound("Customer.NotFound", "The customer was not found.");
 
-        return new List<Error>();
+        // Update customer fields
+        var errorOrCustomer = customer.Update(
+            firstName: command.FirstName,
+            lastName: command.LastName,
+            birthdate: command.Birthdate,
+            email: command.Email,
+            street: command.Address?.Street,
+            city: command.Address?.City,
+            postCode: command.Address?.PostCode,
+            country: command.Address?.Country);
+        if (errorOrCustomer.IsError) return errorOrCustomer.Errors;
+
+        // Save customer
+        await _repository.Save(customer);
+
+        return customer;
     }
 }

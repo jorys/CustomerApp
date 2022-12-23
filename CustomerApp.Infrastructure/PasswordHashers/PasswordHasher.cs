@@ -19,7 +19,7 @@ public sealed class PasswordHasher : IPasswordHasher
         _logger = logger;
     }
 
-    public ErrorOr<HashedPassword> Hash(Password password)
+    public string Hash(Password password)
     {
         using var algorithm = new Rfc2898DeriveBytes(
           password.Value,
@@ -29,7 +29,7 @@ public sealed class PasswordHasher : IPasswordHasher
         var key = Convert.ToBase64String(algorithm.GetBytes(_passwordHashettings.KeySize));
         var salt = Convert.ToBase64String(algorithm.Salt);
 
-        return HashedPassword.Create($"{_passwordHashettings.Iterations}.{salt}.{key}");
+        return $"{_passwordHashettings.Iterations}.{salt}.{key}";
     }
 
     public bool IsCorrectPassword(CustomerId customerId, HashedPassword savedPassword, Password password)

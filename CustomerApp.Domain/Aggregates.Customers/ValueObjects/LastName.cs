@@ -18,7 +18,7 @@ public sealed class LastName : ValueObject
         {
             return Errors.IsRequired(nameof(LastName));
         }
-        return new LastName(value.ToLowerInvariant());
+        return new LastName(value.FormatAsTitle());
     }
 
     public override IEnumerable<object> GetEqualityComponents()

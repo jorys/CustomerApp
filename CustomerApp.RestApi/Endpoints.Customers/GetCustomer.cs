@@ -9,8 +9,7 @@ using System.Net;
 
 namespace CustomerApp.RestApi.Endpoints.Customers;
 
-[ApiController]
-[Route("api/customer")]
+[Route($"{BaseUrl}/customer")]
 public sealed class GetCustomer : AuthenticatedControllerBase
 {
     readonly GetCustomerHandler _queryHandler;
@@ -22,15 +21,16 @@ public sealed class GetCustomer : AuthenticatedControllerBase
     }
 
     [HttpGet]
-    [Tags("Customer")]
+    [Tags(SwaggerTags.Customer)]
     [SwaggerResponse((int)HttpStatusCode.OK, type: typeof(CustomerResponse))]
-    [SwaggerResponse((int)HttpStatusCode.BadRequest)]
     [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
+    [SwaggerResponse((int)HttpStatusCode.BadRequest)]
     [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
     public async Task<ActionResult<CustomerResponse>> Handle()
     {
         var query = new GetCustomerQuery(CustomerId: CustomerId);
         var errorOrCustomer = await _queryHandler.Handle(query);
+
         return ToActionResult(
             errorOrCustomer, 
             customer => Ok(CustomerResponse.From(customer)));
