@@ -7,32 +7,31 @@ namespace CustomerApp.Infrastructure.Repositories.Models;
 internal sealed class CustomerBson
 {
     [BsonId]
-    [BsonElement("_id")]
-    [BsonRepresentation(BsonType.ObjectId)]
-    internal Guid CustomerId { get; }
+    [BsonGuidRepresentation(GuidRepresentation.Standard)]
+    internal Guid CustomerId { get; init; }
 
     [BsonElement("firstName")]
-    internal string FirstName { get; }
+    internal string FirstName { get; init; }
 
     [BsonElement("lastName")]
-    internal string LastName { get; }
+    internal string LastName { get; init; }
 
     [BsonElement("birthdate")]
-    internal DateOnly Birthdate { get; }
+    internal DateOnly Birthdate { get; init; }
 
     [BsonElement("email")]
-    internal string Email { get; }
+    internal string Email { get; init; }
 
     [BsonElement("password")]
-    internal string HashedPassword { get; }
+    internal string HashedPassword { get; init; }
 
     [BsonElement("status")]
-    internal string CustomerStatus { get; }
+    internal string CustomerStatus { get; init; }
 
     [BsonElement("address")]
-    internal AddressBson Address { get; }
+    internal AddressBson Address { get; init; }
 
-    internal CustomerBson(Guid customerId, string firstName, string lastName, DateOnly birthdate, string email, string hashedPassword, string customerStatus, AddressBson address)
+    public CustomerBson(Guid customerId, string firstName, string lastName, DateOnly birthdate, string email, string hashedPassword, string customerStatus, AddressBson address)
     {
         CustomerId = customerId;
         FirstName = firstName;
@@ -54,4 +53,10 @@ internal sealed class CustomerBson
             hashedPassword: customer.HashedPassword.Value,
             customerStatus: customer.Status.Value,
             address: AddressBson.From(customer.Address));
+
+    internal Customer ToDomain()
+    {
+        //TODO
+        throw new NotImplementedException();
+    }
 }

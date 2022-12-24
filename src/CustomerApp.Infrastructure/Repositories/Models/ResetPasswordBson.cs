@@ -7,18 +7,17 @@ namespace CustomerApp.Infrastructure.Repositories.Models;
 internal sealed class ResetPasswordBson
 {
     [BsonId]
-    [BsonElement("_id")]
-    [BsonRepresentation(BsonType.ObjectId)]
-    internal Guid CustomerId { get; }
+    [BsonGuidRepresentation(GuidRepresentation.Standard)]
+    internal Guid CustomerId { get; init; }
 
     [BsonElement("email")]
-    internal string Email{ get; }
+    internal string Email{ get; init; }
 
     [BsonElement("token")]
-    internal string Token { get; }
+    internal string Token { get; init; }
 
     [BsonElement("tokenExpiry")]
-    internal DateTime TokenExpiry { get; }
+    internal DateTime TokenExpiry { get; init; }
 
     public ResetPasswordBson(Guid customerId, string email, string token, DateTime tokenExpiry)
     {
@@ -34,4 +33,10 @@ internal sealed class ResetPasswordBson
             email: resetPassword.Email.Value,
             token: resetPassword.Token.Value,
             tokenExpiry: resetPassword.TokenExpiry.Value);
+
+    internal ResetPasswordResource? ToDomain()
+    {
+        //TODO
+        throw new NotImplementedException();
+    }
 }

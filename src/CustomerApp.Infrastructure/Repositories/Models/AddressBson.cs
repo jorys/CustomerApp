@@ -6,16 +6,16 @@ namespace CustomerApp.Infrastructure.Repositories.Models;
 internal sealed class AddressBson
 {
     [BsonElement("street")]
-    internal string Street { get; }
+    internal string Street { get; init; }
 
     [BsonElement("city")]
-    internal string City { get; }
+    internal string City { get; init; }
 
     [BsonElement("postCode")]
-    internal int PostCode { get; }
+    internal int PostCode { get; init; }
 
     [BsonElement("country")]
-    internal string Country { get; }
+    internal string Country { get; init; }
 
     public AddressBson(string street, string city, int postCode, string country)
     {

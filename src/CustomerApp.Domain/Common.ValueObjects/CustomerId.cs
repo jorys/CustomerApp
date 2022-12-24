@@ -16,6 +16,7 @@ public sealed class CustomerId : ValueObject
     {
         return new CustomerId(Guid.NewGuid());
     }
+
     public static ErrorOr<CustomerId> Create(Guid value)
     {
         if (value == Guid.Empty)
@@ -24,7 +25,7 @@ public sealed class CustomerId : ValueObject
         }
         return new CustomerId(value);
     }
-
+    
     public override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;

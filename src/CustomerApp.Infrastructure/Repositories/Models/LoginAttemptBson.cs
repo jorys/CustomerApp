@@ -7,18 +7,17 @@ namespace CustomerApp.Infrastructure.Repositories.Models;
 internal sealed class LoginAttemptBson
 {
     [BsonId]
-    [BsonElement("_id")]
-    [BsonRepresentation(BsonType.ObjectId)]
-    internal Guid CustomerId { get; }
+    [BsonGuidRepresentation(GuidRepresentation.Standard)]
+    internal Guid CustomerId { get; init; }
 
     [BsonElement("lastAttemptDate")]
-    internal DateTime LastAttemptDate { get; }
+    internal DateTime LastAttemptDate { get; init; }
 
     [BsonElement("status")]
-    internal string AttemptStatus { get; }
+    internal string AttemptStatus { get; init; }
 
     [BsonElement("attemptCount")]
-    internal int AttemptCount { get; }
+    internal int AttemptCount { get; init; }
 
     public LoginAttemptBson(Guid customerId, DateTime lastAttemptDate, string attemptStatus, int attemptCount)
     {
@@ -34,4 +33,10 @@ internal sealed class LoginAttemptBson
             lastAttemptDate: loginAttempt.LastAttemptDate.Value,
             attemptStatus: loginAttempt.AttemptStatus.Value,
             attemptCount: loginAttempt.AttemptCount.Value);
+
+    internal LoginAttempt ToDomain()
+    {
+        // TODO
+        throw new NotImplementedException();
+    }
 }

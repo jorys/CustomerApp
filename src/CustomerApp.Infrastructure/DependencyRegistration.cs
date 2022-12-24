@@ -3,6 +3,7 @@ using CustomerApp.Infrastructure.EmailSenders;
 using CustomerApp.Infrastructure.JwtTokenGenerators;
 using CustomerApp.Infrastructure.PasswordHashers;
 using CustomerApp.Infrastructure.Repositories;
+using CustomerApp.Infrastructure.Repositories.Serializers;
 using CustomerApp.Infrastructure.TokenGenerators;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using System.Text;
 
@@ -72,6 +74,8 @@ public static class DependencyRegistration
 
         services.AddSingleton<IMongoClient>(_ => new MongoClient(connectionString));
         services.AddScoped<IRepository, MongoRepository>();
+
+        BsonSerializer.RegisterSerializer(new DateOnlySerializer());
 
         return services;
     }

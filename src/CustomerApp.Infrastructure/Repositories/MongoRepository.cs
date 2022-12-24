@@ -18,72 +18,92 @@ public sealed class MongoRepository : IRepository
     const string _resetPasswordsCollectionName = "resetpasswords";
 
     readonly IMongoCollection<CustomerBson> _customersCollection;
-    readonly IMongoCollection<LoginAttemptBson> _loginAttemptCollection;
+    readonly IMongoCollection<LoginAttemptBson> _loginAttemptsCollection;
     readonly IMongoCollection<ResetPasswordBson> _resetPasswordsCollection;
 
     public MongoRepository(IMongoClient mongoClient)
-	{
+    {
         var customerDb = mongoClient.GetDatabase(CustomerDb);
 
         _customersCollection = customerDb.GetCollection<CustomerBson>(_customersCollectionName);
-        _loginAttemptCollection = customerDb.GetCollection<LoginAttemptBson>(_loginAttemptsCollectionName);
+        _loginAttemptsCollection = customerDb.GetCollection<LoginAttemptBson>(_loginAttemptsCollectionName);
         _resetPasswordsCollection = customerDb.GetCollection<ResetPasswordBson>(_resetPasswordsCollectionName);
     }
 
     public Task DeleteCustomer(CustomerId customerId, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        return _customersCollection
+            .FindOneAndDeleteAsync(customer => customer.CustomerId == customerId.Value);
     }
 
     public Task DeleteResetPasswordResource(CustomerId customerId, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        return _resetPasswordsCollection
+            .FindOneAndDeleteAsync(resetPassword => resetPassword.CustomerId == customerId.Value);
     }
 
-    public async Task<bool> DoesEmailAlreadyExist(Email email, CancellationToken ct)
+    public Task<bool> DoesEmailAlreadyExist(Email email, CancellationToken ct)
     {
-        // TODO: not working
-        var filter = Builders<CustomerBson>.Filter
-            .Eq(customer => customer.Email, email.Value);
-        var existingCustomer = await _customersCollection.FindAsync(filter, cancellationToken: ct);
-
-        return existingCustomer.Current != null;
+        return _customersCollection
+            .Find(customer => customer.Email == email.Value)
+            .AnyAsync(ct);
     }
 
-    public Task<Customer?> GetCustomer(CustomerId customerId, CancellationToken ct)
+    public async Task<Customer?> GetCustomer(CustomerId customerId, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var customerBson = await _customersCollection
+            .Find(customer => customer.CustomerId == customerId.Value)
+            .SingleOrDefaultAsync();
+
+        if (customerBson == null) return null;
+        return customerBson.ToDomain();
     }
 
-    public Task<Customer?> GetCustomer(Email email, CancellationToken ct)
+    public async Task<Customer?> GetCustomer(Email email, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var customerBson = await _customersCollection
+            .Find(customer => customer.Email == email.Value)
+            .SingleOrDefaultAsync();
+
+        if (customerBson == null) return null;
+        return customerBson.ToDomain();
     }
 
-    public Task<LoginAttempt?> GetLastLoginAttempt(CustomerId customerId, CancellationToken ct)
+    public async Task<LoginAttempt?> GetLastLoginAttempt(CustomerId customerId, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var loginAttemptsBson = await _loginAttemptsCollection
+            .Find(loginAttempt => loginAttempt.CustomerId == customerId.Value)
+            .SingleOrDefaultAsync();
+
+        if (loginAttemptsBson == null) return null;
+        return loginAttemptsBson.ToDomain();
     }
 
-    public Task<ResetPasswordResource?> GetResetPasswordResource(Email email, CancellationToken ct)
+    public async Task<ResetPasswordResource?> GetResetPasswordResource(Email email, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var resetPasswordsBson = await _resetPasswordsCollection
+            .Find(resetPassword => resetPassword.Email == email.Value)
+            .SingleOrDefaultAsync();
+
+        if (resetPasswordsBson == null) return null;
+        return resetPasswordsBson.ToDomain();
     }
 
     public Task Save(Customer customer, CancellationToken ct)
     {
-        // TODO: insert if not exists
         var customerBson = CustomerBson.From(customer);
         return _customersCollection.InsertOneAsync(customerBson, cancellationToken: ct);
     }
 
     public Task Save(LoginAttempt loginAttempt, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var loginAttemptBson = LoginAttemptBson.From(loginAttempt);
+        return _loginAttemptsCollection.InsertOneAsync(loginAttemptBson, cancellationToken: ct);
     }
 
     public Task Save(ResetPasswordResource resetPasswordResource, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var resetPassordBson = ResetPasswordBson.From(resetPasswordResource);
+        return _resetPasswordsCollection.InsertOneAsync(resetPassordBson, cancellationToken: ct);
     }
 }
