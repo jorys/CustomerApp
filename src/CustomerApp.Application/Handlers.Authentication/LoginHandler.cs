@@ -25,14 +25,14 @@ public sealed class LoginHandler
         _repository = repository;
     }
 
-    public async Task<ErrorOr<AuthenticationResult>> Handle(LoginCommand command)
+    public async Task<ErrorOr<AuthenticationResult>> Handle(LoginCommand command, CancellationToken ct)
     {
         // Get customer by email
         var errorOrEmail = Email.Create(command.Email);
         if (errorOrEmail.IsError) return errorOrEmail.Errors;
         var email = errorOrEmail.Value;
 
-        var customer = await _repository.GetCustomer(email);
+        var customer = await _repository.GetCustomer(email, ct);
         if (customer is null) return AuthenticationError;
 
         // Check if account is locked
@@ -44,14 +44,14 @@ public sealed class LoginHandler
         var password = errorOrPassword.Value;
 
         var isValidPassword = _passwordHasher.IsCorrectPassword(customer.Id, customer.HashedPassword, password);
-        if (!isValidPassword) return await HandleLoginFailure(customer);
+        if (!isValidPassword) return await HandleLoginFailure(customer, ct);
 
         // Save success login attempt
         var errorOrLoginAttemptSuccess = LoginAttempt.CreateSuccess(customer.Id);
         if (errorOrLoginAttemptSuccess.IsError) return AuthenticationError;
         var loginAttemptSuccess = errorOrLoginAttemptSuccess.Value;
 
-        await _repository.Save(loginAttemptSuccess);
+        await _repository.Save(loginAttemptSuccess, ct);
 
         // Generate JWT token
         var jwtToken = _jwtTokenGenerator.GenerateToken(
@@ -66,10 +66,10 @@ public sealed class LoginHandler
             JwtToken: jwtToken);
     }
 
-    private async Task<ErrorOr<AuthenticationResult>> HandleLoginFailure(Customer customer)
+    private async Task<ErrorOr<AuthenticationResult>> HandleLoginFailure(Customer customer, CancellationToken ct)
     {
         // Get last login attempt
-        var lastLoginAttempt = await _repository.GetLastLoginAttempt(customer.Id);
+        var lastLoginAttempt = await _repository.GetLastLoginAttempt(customer.Id, ct);
         var errorOrLoginAttempt = lastLoginAttempt is null
             ? LoginAttempt.CreateFailed(customer.Id)
             : lastLoginAttempt.AttemptFails();
@@ -79,12 +79,12 @@ public sealed class LoginHandler
             errorOrLoginAttempt.FirstError.Code == Errors.MaximumLoginAttemptErrorCode)
         {
             customer.Lock();
-            await _repository.Save(customer);
+            await _repository.Save(customer, ct);
             return AccountLocked;
         }
 
         // Save login attempt
-        await _repository.Save(errorOrLoginAttempt.Value);
+        await _repository.Save(errorOrLoginAttempt.Value, ct);
 
         return AuthenticationError;
     }

@@ -1,6 +1,5 @@
 ﻿using CustomerApp.Application.Handlers.Customers.Models;
 using CustomerApp.Application.Interfaces;
-using CustomerApp.Domain;
 using CustomerApp.Domain.ValueObjects;
 using ErrorOr;
 
@@ -15,13 +14,13 @@ public sealed class DeleteCustomerHandler
         _repository = repository;
     }
 
-    public async Task<ErrorOr<Success>> Handle(DeleteCustomerCommand command)
+    public async Task<ErrorOr<Success>> Handle(DeleteCustomerCommand command, CancellationToken ct)
     {
         var errorOrCustomerId = CustomerId.Create(command.CustomerId);
         if (errorOrCustomerId.IsError) return errorOrCustomerId.Errors;
 
         var customerId = errorOrCustomerId.Value;
-        await _repository.DeleteCustomer(customerId);
+        await _repository.DeleteCustomer(customerId, ct);
 
         return new Success();
     }

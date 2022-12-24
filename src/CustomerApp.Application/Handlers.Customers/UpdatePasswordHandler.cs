@@ -18,14 +18,14 @@ public sealed class UpdatePasswordHandler
         _passwordHasher = passwordHasher;
     }
 
-    public async Task<ErrorOr<Customer>> Handle(UpdatePasswordCommand command)
+    public async Task<ErrorOr<Customer>> Handle(UpdatePasswordCommand command, CancellationToken ct)
     {
         // Get customer
         var errorOrCustomerId = CustomerId.Create(command.CustomerId);
         if (errorOrCustomerId.IsError) return errorOrCustomerId.Errors;
 
         var customerId = errorOrCustomerId.Value;
-        var customer = await _repository.GetCustomer(customerId);
+        var customer = await _repository.GetCustomer(customerId, ct);
 
         if (customer is null) return Error.NotFound("Customer.NotFound", "The customer was not found.");
 
@@ -41,7 +41,7 @@ public sealed class UpdatePasswordHandler
         if (errorOrCustomer.IsError) return errorOrCustomer.Errors;
 
         // Save customer
-        await _repository.Save(customer);
+        await _repository.Save(customer, ct);
 
         return customer;
     }

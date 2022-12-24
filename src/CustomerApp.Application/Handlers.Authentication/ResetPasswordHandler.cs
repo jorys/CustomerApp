@@ -24,14 +24,14 @@ public sealed class ResetPasswordHandler
         _logger = logger;
     }
 
-    public async Task<ErrorOr<Success>> Handle(ResetPasswordCommand command)
+    public async Task<ErrorOr<Success>> Handle(ResetPasswordCommand command, CancellationToken ct)
     {
         // Get reset password resource by email
         var errorOrEmail = Email.Create(command.Email);
         if (errorOrEmail.IsError) return errorOrEmail.Errors;
         var email = errorOrEmail.Value;
 
-        var resetPasswordResource = await _repository.GetResetPasswordResource(email);
+        var resetPasswordResource = await _repository.GetResetPasswordResource(email, ct);
 
         // Check reset password resource exists
         if (resetPasswordResource is null) return GetInvalidTokenError(new { email.Value });
@@ -54,17 +54,17 @@ public sealed class ResetPasswordHandler
         var hashedPassword = _passwordHasher.Hash(password);
 
         // Update customer password
-        var customer = await _repository.GetCustomer(resetPasswordResource.Id);
+        var customer = await _repository.GetCustomer(resetPasswordResource.Id, ct);
         if (customer is null) return GetInvalidTokenError(new { customerId = resetPasswordResource.Id });
 
         var errorOrCustomer = customer.UpdatePassword(hashedPassword);
         if (errorOrCustomer.IsError) return errorOrCustomer.Errors;
 
         // Save customer
-        await _repository.Save(customer);
+        await _repository.Save(customer, ct);
 
         // Delete reset password resource
-        await _repository.DeleteResetPasswordResource(resetPasswordResource.Id);
+        await _repository.DeleteResetPasswordResource(resetPasswordResource.Id, ct);
 
         return new Success();
     }

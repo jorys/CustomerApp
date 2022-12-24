@@ -24,10 +24,10 @@ public sealed class DeleteCustomer : AuthenticatedControllerBase
     [SwaggerResponse((int)HttpStatusCode.NoContent)]
     [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
     [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-    public async Task<ActionResult> Handle()
+    public async Task<ActionResult> Handle(CancellationToken ct)
     {
         var command = new DeleteCustomerCommand(CustomerId: CustomerId);
-        var errorOrSuccess = await _commandHandler.Handle(command);
+        var errorOrSuccess = await _commandHandler.Handle(command, ct);
 
         return ToActionResult(
             errorOrSuccess, 

@@ -13,7 +13,7 @@ public sealed class InMemoryRepository : IRepository
     static readonly List<LoginAttempt> _loginAttempts = new();
     static readonly List<ResetPasswordResource> _resetPasswordResources = new();
 
-    public Task DeleteCustomer(CustomerId customerId)
+    public Task DeleteCustomer(CustomerId customerId, CancellationToken ct)
     {
         int index = _customers.FindIndex(savedCustomer => savedCustomer.Id == customerId);
 
@@ -23,7 +23,7 @@ public sealed class InMemoryRepository : IRepository
         return Task.FromResult(true);
     }
 
-    public Task DeleteResetPasswordResource(CustomerId customerId)
+    public Task DeleteResetPasswordResource(CustomerId customerId, CancellationToken ct)
     {
         int index = _resetPasswordResources.FindIndex(savedResource => savedResource.Id == customerId);
 
@@ -33,37 +33,37 @@ public sealed class InMemoryRepository : IRepository
         return Task.FromResult(true);
     }
 
-    public Task<bool> DoesEmailAlreadyExist(Email email)
+    public Task<bool> DoesEmailAlreadyExist(Email email, CancellationToken ct)
     {
         var doesEmailAlreadyExist = _customers.Any(customer => customer.Email == email);
         return Task.FromResult(doesEmailAlreadyExist);
     }
 
-    public Task<Customer?> GetCustomer(CustomerId customerId)
+    public Task<Customer?> GetCustomer(CustomerId customerId, CancellationToken ct)
     {
         var customer = _customers.FirstOrDefault(customer => customer.Id == customerId);
         return Task.FromResult(customer);
     }
 
-    public Task<Customer?> GetCustomer(Email email)
+    public Task<Customer?> GetCustomer(Email email, CancellationToken ct)
     {
         var customer = _customers.FirstOrDefault(customer => customer.Email == email);
         return Task.FromResult(customer);
     }
 
-    public Task<LoginAttempt?> GetLastLoginAttempt(CustomerId customerId)
+    public Task<LoginAttempt?> GetLastLoginAttempt(CustomerId customerId, CancellationToken ct)
     {
         var lastLoginAttempt = _loginAttempts.FirstOrDefault(loginAttempt => loginAttempt.Id == customerId);
         return Task.FromResult(lastLoginAttempt);
     }
 
-    public Task<ResetPasswordResource?> GetResetPasswordResource(Email email)
+    public Task<ResetPasswordResource?> GetResetPasswordResource(Email email, CancellationToken ct)
     {
         var resetPassword = _resetPasswordResources.FirstOrDefault(resetPassword => resetPassword.Email == email);
         return Task.FromResult(resetPassword);
     }
 
-    public Task Save(Customer customer)
+    public Task Save(Customer customer, CancellationToken ct)
     {
         int index = _customers.FindIndex(savedCustomer => savedCustomer.Id == customer.Id);
 
@@ -73,7 +73,7 @@ public sealed class InMemoryRepository : IRepository
         return Task.CompletedTask;
     }
 
-    public Task Save(LoginAttempt loginAttempt)
+    public Task Save(LoginAttempt loginAttempt, CancellationToken ct)
     {
         int index = _loginAttempts.FindIndex(savedLoginAttempt => savedLoginAttempt.Id == loginAttempt.Id);
         
@@ -83,7 +83,7 @@ public sealed class InMemoryRepository : IRepository
         return Task.CompletedTask;
     }
 
-    public Task Save(ResetPasswordResource resetPasswordResource)
+    public Task Save(ResetPasswordResource resetPasswordResource, CancellationToken ct)
     {
         int index = _resetPasswordResources.FindIndex(savedResetPassword => savedResetPassword.Id == resetPasswordResource.Id);
 

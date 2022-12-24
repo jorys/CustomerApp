@@ -15,13 +15,13 @@ public sealed class GetCustomerHandler
         _repository = repository;
     }
 
-    public async Task<ErrorOr<Customer>> Handle(GetCustomerQuery query)
+    public async Task<ErrorOr<Customer>> Handle(GetCustomerQuery query, CancellationToken ct)
     {
         var errorOrCustomerId = CustomerId.Create(query.CustomerId);
         if (errorOrCustomerId.IsError) return errorOrCustomerId.Errors;
 
         var customerId = errorOrCustomerId.Value;
-        var customer = await _repository.GetCustomer(customerId);
+        var customer = await _repository.GetCustomer(customerId, ct);
 
         if (customer is null)
         {

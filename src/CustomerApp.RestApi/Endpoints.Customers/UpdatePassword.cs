@@ -24,10 +24,10 @@ public class UpdatePassword : AuthenticatedControllerBase
     [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
     [SwaggerResponse((int)HttpStatusCode.BadRequest)]
     [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-    public async Task<ActionResult> Handle(UpdatePasswordRequest request)
+    public async Task<ActionResult> Handle(UpdatePasswordRequest request, CancellationToken ct)
     {
         var command = request.ToCommand(CustomerId);
-        var errorOrSuccess = await _commandHandler.Handle(command);
+        var errorOrSuccess = await _commandHandler.Handle(command, ct);
 
         return ToActionResult(
             errorOrSuccess, 

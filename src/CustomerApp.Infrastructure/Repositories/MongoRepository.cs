@@ -26,58 +26,59 @@ public sealed class MongoRepository : IRepository
         _customersCollection = customerDb.GetCollection<CustomerBson>(_customersCollectionName);
     }
 
-    public Task DeleteCustomer(CustomerId customerId)
+    public Task DeleteCustomer(CustomerId customerId, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
 
-    public Task DeleteResetPasswordResource(CustomerId customerId)
+    public Task DeleteResetPasswordResource(CustomerId customerId, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<bool> DoesEmailAlreadyExist(Email email)
+    public async Task<bool> DoesEmailAlreadyExist(Email email, CancellationToken ct)
     {
         // TODO: not working
         var filter = Builders<CustomerBson>.Filter
             .Eq(customer => customer.Email, email.Value);
-        var existingCustomer = await _customersCollection.FindAsync(filter);
+        var existingCustomer = await _customersCollection.FindAsync(filter, cancellationToken: ct);
 
         return existingCustomer.Current != null;
     }
 
-    public Task<Customer?> GetCustomer(CustomerId customerId)
+    public Task<Customer?> GetCustomer(CustomerId customerId, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Customer?> GetCustomer(Email email)
+    public Task<Customer?> GetCustomer(Email email, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
 
-    public Task<LoginAttempt?> GetLastLoginAttempt(CustomerId customerId)
+    public Task<LoginAttempt?> GetLastLoginAttempt(CustomerId customerId, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
 
-    public Task<ResetPasswordResource?> GetResetPasswordResource(Email email)
+    public Task<ResetPasswordResource?> GetResetPasswordResource(Email email, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
 
-    public Task Save(Customer customer)
+    public Task Save(Customer customer, CancellationToken ct)
     {
+        // TODO: insert if not exists
         var customerBson = CustomerBson.From(customer);
-        return _customersCollection.InsertOneAsync(customerBson);
+        return _customersCollection.InsertOneAsync(customerBson, cancellationToken: ct);
     }
 
-    public Task Save(LoginAttempt loginAttempt)
+    public Task Save(LoginAttempt loginAttempt, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
 
-    public Task Save(ResetPasswordResource resetPasswordResource)
+    public Task Save(ResetPasswordResource resetPasswordResource, CancellationToken ct)
     {
         throw new NotImplementedException();
     }

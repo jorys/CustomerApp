@@ -23,10 +23,10 @@ public sealed class ForgotPassword : InternalControllerBase
     [SwaggerResponse((int)HttpStatusCode.NoContent)]
     [SwaggerResponse((int)HttpStatusCode.BadRequest)]
     [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-    public async Task<ActionResult> Handle(ForgotPasswordRequest request)
+    public async Task<ActionResult> Handle(ForgotPasswordRequest request, CancellationToken ct)
     {
         var command = request.ToCommand();
-        var errorOrAuthenticationResult = await _commandHandler.Handle(command);
+        var errorOrAuthenticationResult = await _commandHandler.Handle(command, ct);
 
         return ToActionResult(
             errorOrAuthenticationResult,

@@ -25,10 +25,10 @@ public sealed class Login : InternalControllerBase
     [SwaggerResponse((int)HttpStatusCode.OK, type: typeof(AuthenticationResponse))]
     [SwaggerResponse((int)HttpStatusCode.BadRequest)]
     [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-    public async Task<ActionResult<AuthenticationResponse>> Handle(LoginRequest request)
+    public async Task<ActionResult<AuthenticationResponse>> Handle(LoginRequest request, CancellationToken ct)
     {
         var command = request.ToCommand();
-        var errorOrAuthenticationResult = await _commandHandler.Handle(command);
+        var errorOrAuthenticationResult = await _commandHandler.Handle(command, ct);
 
         return ToActionResult(
             errorOrAuthenticationResult, 

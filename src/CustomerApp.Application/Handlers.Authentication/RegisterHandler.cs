@@ -22,7 +22,7 @@ public sealed class RegisterHandler
         _repository = repository;
     }
 
-    public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command)
+    public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken ct)
     {
         // Check input password
         var errorOrPassword = Password.Create(command.Password);
@@ -48,14 +48,14 @@ public sealed class RegisterHandler
         var customer = errorOrCustomer.Value;
 
         // Check if email already exist
-        var emailAlreadyExist = await _repository.DoesEmailAlreadyExist(customer.Email);
+        var emailAlreadyExist = await _repository.DoesEmailAlreadyExist(customer.Email, ct);
         if (emailAlreadyExist)
         {
             return Error.Conflict("Email.AlreadyExist", "A customer with same email already exist.");
         }
 
         // Save in database
-        await _repository.Save(customer);
+        await _repository.Save(customer, ct);
 
         // Generate JWT token
         var jwtToken = _jwtTokenGenerator.GenerateToken(

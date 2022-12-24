@@ -32,14 +32,14 @@ public sealed class ForgotPasswordHandler
         _logger = logger;
     }
 
-    public async Task<ErrorOr<Success>> Handle(ForgotPasswordCommand command)
+    public async Task<ErrorOr<Success>> Handle(ForgotPasswordCommand command, CancellationToken ct)
     {
         // Get customer by email
         var errorOrEmail = Email.Create(command.Email);
         if (errorOrEmail.IsError) return errorOrEmail.Errors;
         var email = errorOrEmail.Value;
 
-        var customer = await _repository.GetCustomer(email);
+        var customer = await _repository.GetCustomer(email, ct);
         
         // If user does not exist, do nothing
         if (customer is null) return new Success();
@@ -61,7 +61,7 @@ public sealed class ForgotPasswordHandler
         var resetPassword = errorOrResetPassword.Value;
 
         // Save reset password resource
-        await _repository.Save(resetPassword);
+        await _repository.Save(resetPassword, ct);
 
         // Send email
         var success = await _emailSender.Send(email, token);

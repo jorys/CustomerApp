@@ -26,10 +26,10 @@ public sealed class GetCustomer : AuthenticatedControllerBase
     [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
     [SwaggerResponse((int)HttpStatusCode.BadRequest)]
     [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-    public async Task<ActionResult<CustomerResponse>> Handle()
+    public async Task<ActionResult<CustomerResponse>> Handle(CancellationToken ct)
     {
         var query = new GetCustomerQuery(CustomerId: CustomerId);
-        var errorOrCustomer = await _queryHandler.Handle(query);
+        var errorOrCustomer = await _queryHandler.Handle(query, ct);
 
         return ToActionResult(
             errorOrCustomer, 

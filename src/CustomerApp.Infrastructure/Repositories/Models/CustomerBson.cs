@@ -6,8 +6,7 @@ namespace CustomerApp.Infrastructure.Repositories.Models;
 
 internal sealed class CustomerBson
 {
-    [BsonId]
-    [BsonElement("_id")]
+    [BsonElement("customerId")]
     internal Guid CustomerId { get; }
 
     [BsonElement("firstName")]

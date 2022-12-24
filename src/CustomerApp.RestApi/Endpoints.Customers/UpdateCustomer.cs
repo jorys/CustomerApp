@@ -25,10 +25,10 @@ public class UpdateCustomer : AuthenticatedControllerBase
     [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
     [SwaggerResponse((int)HttpStatusCode.BadRequest)]
     [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-    public async Task<ActionResult<CustomerResponse>> Handle(UpdateCustomerRequest request)
+    public async Task<ActionResult<CustomerResponse>> Handle(UpdateCustomerRequest request, CancellationToken ct)
     {
         var command = request.ToCommand(CustomerId);
-        var errorOrCustomer = await _commandHandler.Handle(command);
+        var errorOrCustomer = await _commandHandler.Handle(command, ct);
 
         return ToActionResult(
             errorOrCustomer, 

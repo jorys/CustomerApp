@@ -15,14 +15,14 @@ public sealed class UpdateCustomerHandler
         _repository = repository;
     }
 
-    public async Task<ErrorOr<Customer>> Handle(UpdateCustomerCommand command)
+    public async Task<ErrorOr<Customer>> Handle(UpdateCustomerCommand command, CancellationToken ct)
     {
         // Get customer
         var errorOrCustomerId = CustomerId.Create(command.CustomerId);
         if (errorOrCustomerId.IsError) return errorOrCustomerId.Errors;
 
         var customerId = errorOrCustomerId.Value;
-        var customer = await _repository.GetCustomer(customerId);
+        var customer = await _repository.GetCustomer(customerId, ct);
 
         if (customer is null) return Error.NotFound("Customer.NotFound", "The customer was not found.");
 
@@ -39,7 +39,7 @@ public sealed class UpdateCustomerHandler
         if (errorOrCustomer.IsError) return errorOrCustomer.Errors;
 
         // Save customer
-        await _repository.Save(customer);
+        await _repository.Save(customer, ct);
 
         return customer;
     }
