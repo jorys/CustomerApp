@@ -3,7 +3,6 @@ using CustomerApp.Application.Handlers.Customers;
 using CustomerApp.Application.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.ComponentModel;
 
 namespace CustomerApp.Application;
 

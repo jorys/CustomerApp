@@ -7,7 +7,6 @@ using CustomerApp.Domain.ValueObjects;
 
 namespace CustomerApp.Infrastructure.Repositories;
 
-// TODO: performance - PK customerId, IDX email
 public sealed class InMemoryRepository : IRepository
 {
     static readonly List<Customer> _customers = new();

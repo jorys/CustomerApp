@@ -1,13 +1,39 @@
 version: '3.4'
 
 services:
+  # App
   customerapp.restapi:
     image: ${DOCKER_REGISTRY-}customerapprestapi
     build:
       context: .
-      dockerfile: CustomerApp.RestApi/Dockerfile
+      dockerfile: src/CustomerApp.RestApi/Dockerfile
+  
+  # Local SMTP server
   smtpdev:
-    image: "rnwood/smtp4dev:v3"
+    image: rnwood/smtp4dev
     ports: 
-    - "3000:80"
-    - "2525:25"
+    - 3000:80
+    - 2525:25
+
+  # Mongo Database
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+    - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: pass
+
+  # Mongo web-based admin interface
+  mongo-express:
+    image: mongo-express
+    restart: always
+    depends_on:
+    - mongo
+    ports:
+    - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: pass
+      ME_CONFIG_MONGODB_SERVER: mongo
