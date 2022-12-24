@@ -18,12 +18,16 @@ public sealed class MongoRepository : IRepository
     const string _resetPasswordsCollectionName = "resetpasswords";
 
     readonly IMongoCollection<CustomerBson> _customersCollection;
+    readonly IMongoCollection<LoginAttemptBson> _loginAttemptCollection;
+    readonly IMongoCollection<ResetPasswordBson> _resetPasswordsCollection;
 
     public MongoRepository(IMongoClient mongoClient)
 	{
         var customerDb = mongoClient.GetDatabase(CustomerDb);
 
         _customersCollection = customerDb.GetCollection<CustomerBson>(_customersCollectionName);
+        _loginAttemptCollection = customerDb.GetCollection<LoginAttemptBson>(_loginAttemptsCollectionName);
+        _resetPasswordsCollection = customerDb.GetCollection<ResetPasswordBson>(_resetPasswordsCollectionName);
     }
 
     public Task DeleteCustomer(CustomerId customerId, CancellationToken ct)
