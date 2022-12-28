@@ -34,9 +34,10 @@ internal sealed class LoginAttemptBson
             attemptStatus: loginAttempt.AttemptStatus.Value,
             attemptCount: loginAttempt.AttemptCount.Value);
 
-    internal LoginAttempt ToDomain()
-    {
-        // TODO
-        throw new NotImplementedException();
-    }
+    internal LoginAttempt ToDomain() =>
+        LoginAttempt.ReloadFromRepository(
+            customerId: CustomerId,
+            lastAttemptDate: LastAttemptDate,
+            attemptStatus: AttemptStatus,
+            attemptCount: AttemptCount);
 }

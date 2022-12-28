@@ -29,8 +29,10 @@ public sealed class AttemptStatus : ValueObject
         return Value == Success;
     }
 
-    public override IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
+
+    internal static AttemptStatus ReloadFromRepository(string value) => new(value);
 }

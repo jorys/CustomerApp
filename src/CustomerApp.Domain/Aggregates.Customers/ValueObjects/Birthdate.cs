@@ -1,4 +1,5 @@
 ﻿using CustomerApp.Domain.Common;
+using CustomerApp.Domain.ValueObjects;
 using ErrorOr;
 
 namespace CustomerApp.Domain.Aggregates.Customers.ValueObjects;
@@ -22,8 +23,10 @@ public sealed class Birthdate : ValueObject
         return new Birthdate(value);
     }
 
-    public override IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
+
+    internal static Birthdate ReloadFromRepository(DateOnly value) => new(value);
 }

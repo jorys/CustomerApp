@@ -28,8 +28,10 @@ public sealed class AttemptCount : ValueObject
         return new AttemptCount(Value + 1);
     }
 
-    public override IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
+
+    internal static AttemptCount ReloadFromRepository(int value) => new(value);
 }

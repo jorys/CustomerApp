@@ -21,8 +21,10 @@ public sealed class Token : ValueObject
         return new Token(value);
     }
 
-    public override IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
+
+    internal static Token ReloadFromRepository(string value) => new(value);
 }

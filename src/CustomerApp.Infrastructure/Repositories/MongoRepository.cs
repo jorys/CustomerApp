@@ -5,6 +5,7 @@ using CustomerApp.Domain.Common.ValueObjects;
 using CustomerApp.Domain.LoginAttemptAggregate;
 using CustomerApp.Domain.ValueObjects;
 using CustomerApp.Infrastructure.Repositories.Models;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
 namespace CustomerApp.Infrastructure.Repositories;
@@ -21,7 +22,7 @@ public sealed class MongoRepository : IRepository
     readonly IMongoCollection<LoginAttemptBson> _loginAttemptsCollection;
     readonly IMongoCollection<ResetPasswordBson> _resetPasswordsCollection;
 
-    public MongoRepository(IMongoClient mongoClient)
+    public MongoRepository(IMongoClient mongoClient, ILogger<MongoRepository> repository)
     {
         var customerDb = mongoClient.GetDatabase(CustomerDb);
 
@@ -33,13 +34,17 @@ public sealed class MongoRepository : IRepository
     public Task DeleteCustomer(CustomerId customerId, CancellationToken ct)
     {
         return _customersCollection
-            .FindOneAndDeleteAsync(customer => customer.CustomerId == customerId.Value);
+            .FindOneAndDeleteAsync(
+                customer => customer.CustomerId == customerId.Value,
+                cancellationToken: ct);
     }
 
     public Task DeleteResetPasswordResource(CustomerId customerId, CancellationToken ct)
     {
         return _resetPasswordsCollection
-            .FindOneAndDeleteAsync(resetPassword => resetPassword.CustomerId == customerId.Value);
+            .FindOneAndDeleteAsync(
+                resetPassword => resetPassword.CustomerId == customerId.Value,
+                cancellationToken: ct);
     }
 
     public Task<bool> DoesEmailAlreadyExist(Email email, CancellationToken ct)
@@ -51,9 +56,12 @@ public sealed class MongoRepository : IRepository
 
     public async Task<Customer?> GetCustomer(CustomerId customerId, CancellationToken ct)
     {
+        //var filter = Builders<CustomerBson>.Filter.Eq(new StringFieldDefinition<CustomerBson, Guid>("_id"), customerId.Value);
+        //var customerBson = await _customersCollection.Find(filter).FirstOrDefaultAsync(ct);
+
         var customerBson = await _customersCollection
             .Find(customer => customer.CustomerId == customerId.Value)
-            .SingleOrDefaultAsync();
+            .SingleOrDefaultAsync(ct);
 
         if (customerBson == null) return null;
         return customerBson.ToDomain();
@@ -63,7 +71,7 @@ public sealed class MongoRepository : IRepository
     {
         var customerBson = await _customersCollection
             .Find(customer => customer.Email == email.Value)
-            .SingleOrDefaultAsync();
+            .SingleOrDefaultAsync(ct);
 
         if (customerBson == null) return null;
         return customerBson.ToDomain();
@@ -73,7 +81,7 @@ public sealed class MongoRepository : IRepository
     {
         var loginAttemptsBson = await _loginAttemptsCollection
             .Find(loginAttempt => loginAttempt.CustomerId == customerId.Value)
-            .SingleOrDefaultAsync();
+            .SingleOrDefaultAsync(ct);
 
         if (loginAttemptsBson == null) return null;
         return loginAttemptsBson.ToDomain();
@@ -83,7 +91,7 @@ public sealed class MongoRepository : IRepository
     {
         var resetPasswordsBson = await _resetPasswordsCollection
             .Find(resetPassword => resetPassword.Email == email.Value)
-            .SingleOrDefaultAsync();
+            .SingleOrDefaultAsync(ct);
 
         if (resetPasswordsBson == null) return null;
         return resetPasswordsBson.ToDomain();
@@ -95,10 +103,21 @@ public sealed class MongoRepository : IRepository
         return _customersCollection.InsertOneAsync(customerBson, cancellationToken: ct);
     }
 
-    public Task Save(LoginAttempt loginAttempt, CancellationToken ct)
+    public async Task Save(LoginAttempt loginAttempt, CancellationToken ct)
     {
-        var loginAttemptBson = LoginAttemptBson.From(loginAttempt);
-        return _loginAttemptsCollection.InsertOneAsync(loginAttemptBson, cancellationToken: ct);
+        var loginAttemptResult = await _loginAttemptsCollection.FindOneAndUpdateAsync(
+            saved => saved.CustomerId == loginAttempt.Id.Value,
+            Builders<LoginAttemptBson>.Update
+                .Set(saved => saved.LastAttemptDate, loginAttempt.LastAttemptDate.Value)
+                .Set(saved => saved.AttemptStatus, loginAttempt.AttemptStatus.Value)
+                .Set(saved => saved.AttemptCount, loginAttempt.AttemptCount.Value),
+            cancellationToken: ct);
+        
+        if (loginAttemptResult is null)
+        {
+            var loginAttemptBson = LoginAttemptBson.From(loginAttempt);
+            await _loginAttemptsCollection.InsertOneAsync(loginAttemptBson, cancellationToken: ct);
+        }
     }
 
     public Task Save(ResetPasswordResource resetPasswordResource, CancellationToken ct)

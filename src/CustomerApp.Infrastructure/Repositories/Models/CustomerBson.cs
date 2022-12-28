@@ -54,9 +54,17 @@ internal sealed class CustomerBson
             customerStatus: customer.Status.Value,
             address: AddressBson.From(customer.Address));
 
-    internal Customer ToDomain()
-    {
-        //TODO
-        throw new NotImplementedException();
-    }
+    internal Customer ToDomain() =>
+        Customer.ReloadFromRepository(
+            customerId: CustomerId,
+            firstName: FirstName,
+            lastName: LastName,
+            birthdate: Birthdate,
+            email: Email,
+            hashedPassword: HashedPassword,
+            status: CustomerStatus,
+            street: Address.Street,
+            city: Address.City,
+            postCode: Address.PostCode,
+            country: Address.Country);
 }

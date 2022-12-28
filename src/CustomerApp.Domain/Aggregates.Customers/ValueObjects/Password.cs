@@ -37,8 +37,10 @@ public sealed class Password : ValueObject
         return new Password(value);
     }
 
-    public override IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
+
+    internal static Password ReloadFromRepository(string value) => new(value);
 }

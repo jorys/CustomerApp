@@ -1,5 +1,4 @@
-﻿using CustomerApp.Domain.Common;
-using ErrorOr;
+﻿using ErrorOr;
 using System.ComponentModel.DataAnnotations;
 
 namespace CustomerApp.Domain.Common.ValueObjects;
@@ -26,8 +25,10 @@ public sealed class Email : ValueObject
         return new Email(value.ToLowerInvariant());
     }
 
-    public override IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
+
+    internal static Email ReloadFromRepository(string value) => new(value);
 }

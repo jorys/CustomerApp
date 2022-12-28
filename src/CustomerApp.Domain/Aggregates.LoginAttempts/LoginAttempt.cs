@@ -53,4 +53,11 @@ public sealed class LoginAttempt : AggregateRoot<CustomerId>
 
         return this;
     }
+
+    public static LoginAttempt ReloadFromRepository(Guid customerId, DateTime lastAttemptDate, string attemptStatus, int attemptCount) =>
+        new(
+            customerId: CustomerId.ReloadFromRepository(customerId),
+            lastAttemptDate: AttemptDate.ReloadFromRepository(lastAttemptDate),
+            attemptStatus: AttemptStatus.ReloadFromRepository(attemptStatus),
+            attemptCount: AttemptCount.ReloadFromRepository(attemptCount));
 }

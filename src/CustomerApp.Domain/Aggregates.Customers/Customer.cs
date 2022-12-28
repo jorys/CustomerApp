@@ -118,4 +118,19 @@ public sealed class Customer : AggregateRoot<CustomerId>
         if (errors.Any()) return errors;
         else return this;
     }
+
+    public static Customer ReloadFromRepository(Guid customerId, string firstName, string lastName, DateOnly birthdate, string email, string hashedPassword, string status, string street, string city, int postCode, string country) =>
+        new(
+            CustomerId.ReloadFromRepository(customerId),
+            FirstName.ReloadFromRepository(firstName),
+            LastName.ReloadFromRepository(lastName),
+            Birthdate.ReloadFromRepository(birthdate),
+            Email.ReloadFromRepository(email),
+            HashedPassword.ReloadFromRepository(hashedPassword),
+            CustomerStatus.ReloadFromRepository(status),
+            Address.ReloadFromRepository(
+                street: street, 
+                city: city, 
+                postCode: postCode, 
+                country: country));
 }

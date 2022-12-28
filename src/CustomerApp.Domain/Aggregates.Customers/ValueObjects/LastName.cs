@@ -21,8 +21,10 @@ public sealed class LastName : ValueObject
         return new LastName(value.ToTitleCase());
     }
 
-    public override IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
+
+    internal static LastName ReloadFromRepository(string value) => new(value);
 }

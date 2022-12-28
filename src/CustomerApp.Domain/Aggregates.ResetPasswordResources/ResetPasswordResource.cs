@@ -46,4 +46,11 @@ public sealed class ResetPasswordResource : AggregateRoot<CustomerId>
     }
 
     public bool IsTokenExpired() => TokenExpiry.IsExpired();
+
+    public static ResetPasswordResource ReloadFromRepository(Guid customerId, string email, string token, DateTime tokenExpiry) =>
+        new(
+            CustomerId.ReloadFromRepository(customerId),
+            Email.ReloadFromRepository(email),
+            Token.ReloadFromRepository(token),
+            TokenExpiry.ReloadFromRepository(tokenExpiry));
 }

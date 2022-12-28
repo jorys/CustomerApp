@@ -16,8 +16,10 @@ public sealed class AttemptDate : ValueObject
         return new AttemptDate(DateTime.UtcNow);
     }
 
-    public override IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
+
+    internal static AttemptDate ReloadFromRepository(DateTime value) => new(value);
 }

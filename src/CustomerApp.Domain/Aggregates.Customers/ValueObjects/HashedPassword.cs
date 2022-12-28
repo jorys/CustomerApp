@@ -20,8 +20,10 @@ public sealed class HashedPassword : ValueObject
         return new HashedPassword(value);
     }
 
-    public override IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
+
+    internal static HashedPassword ReloadFromRepository(string value) => new(value);
 }

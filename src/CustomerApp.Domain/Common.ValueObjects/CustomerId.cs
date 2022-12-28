@@ -25,9 +25,11 @@ public sealed class CustomerId : ValueObject
         }
         return new CustomerId(value);
     }
-    
-    public override IEnumerable<object> GetEqualityComponents()
+
+    protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
+
+    internal static CustomerId ReloadFromRepository(Guid value) => new(value);
 }

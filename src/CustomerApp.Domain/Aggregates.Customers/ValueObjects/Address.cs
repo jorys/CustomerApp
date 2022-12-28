@@ -60,11 +60,18 @@ public sealed class Address : ValueObject
             country: country ?? Country);
     }
 
-    public override IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Street;
         yield return City;
         yield return PostCode;
         yield return Country;
     }
+
+    internal static Address ReloadFromRepository(string street, string city, int postCode, string country) =>
+        new(
+            street: street,
+            city: city,
+            postCode: postCode,
+            country: country);
 }

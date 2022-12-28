@@ -1,4 +1,6 @@
 ﻿using CustomerApp.Domain.Common;
+using CustomerApp.Domain.ValueObjects;
+using ErrorOr;
 
 namespace CustomerApp.Domain.Aggregates.Customers.ValueObjects;
 
@@ -6,6 +8,8 @@ public sealed class CustomerStatus : ValueObject
 {
     const string Active = "active";
     const string Locked = "locked";
+
+    readonly static string[] _availableStatuses = new[] { Active, Locked };
 
     public string Value { get; }
 
@@ -26,8 +30,10 @@ public sealed class CustomerStatus : ValueObject
 
     public bool IsLocked() => Value == Locked;
 
-    public override IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
+
+    internal static CustomerStatus ReloadFromRepository(string value) => new(value);
 }

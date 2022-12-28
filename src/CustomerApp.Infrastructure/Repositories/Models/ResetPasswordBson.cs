@@ -34,9 +34,10 @@ internal sealed class ResetPasswordBson
             token: resetPassword.Token.Value,
             tokenExpiry: resetPassword.TokenExpiry.Value);
 
-    internal ResetPasswordResource? ToDomain()
-    {
-        //TODO
-        throw new NotImplementedException();
-    }
+    internal ResetPasswordResource ToDomain() =>
+        ResetPasswordResource.ReloadFromRepository(
+            customerId: CustomerId,
+            email: Email,
+            token: Token,
+            tokenExpiry: TokenExpiry);
 }

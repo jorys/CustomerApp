@@ -21,10 +21,12 @@ public sealed class TokenExpiry : ValueObject
         return new TokenExpiry(value);
     }
 
-    public override IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
 
     internal bool IsExpired() => DateTime.UtcNow > Value;
+
+    internal static TokenExpiry ReloadFromRepository(DateTime value) => new(value);
 }
