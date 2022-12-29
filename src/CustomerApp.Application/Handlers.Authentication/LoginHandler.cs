@@ -51,7 +51,7 @@ public sealed class LoginHandler
         if (errorOrLoginAttemptSuccess.IsError) return AuthenticationError;
         var loginAttemptSuccess = errorOrLoginAttemptSuccess.Value;
 
-        await _repository.Save(loginAttemptSuccess, ct);
+        await _repository.Upsert(loginAttemptSuccess, ct);
 
         // Generate JWT token
         var jwtToken = _jwtTokenGenerator.GenerateToken(
@@ -79,12 +79,12 @@ public sealed class LoginHandler
             errorOrLoginAttempt.FirstError.Code == Errors.MaximumLoginAttemptErrorCode)
         {
             customer.Lock();
-            await _repository.Save(customer, ct);
+            await _repository.Update(customer, ct);
             return AccountLocked;
         }
 
         // Save login attempt
-        await _repository.Save(errorOrLoginAttempt.Value, ct);
+        await _repository.Upsert(errorOrLoginAttempt.Value, ct);
 
         return AuthenticationError;
     }

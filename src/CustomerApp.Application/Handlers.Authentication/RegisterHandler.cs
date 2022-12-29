@@ -55,7 +55,7 @@ public sealed class RegisterHandler
         }
 
         // Save in database
-        await _repository.Save(customer, ct);
+        await _repository.Insert(customer, ct);
 
         // Generate JWT token
         var jwtToken = _jwtTokenGenerator.GenerateToken(

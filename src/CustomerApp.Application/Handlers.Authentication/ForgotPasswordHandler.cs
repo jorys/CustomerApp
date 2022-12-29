@@ -61,7 +61,7 @@ public sealed class ForgotPasswordHandler
         var resetPassword = errorOrResetPassword.Value;
 
         // Save reset password resource
-        await _repository.Save(resetPassword, ct);
+        await _repository.Upsert(resetPassword, ct);
 
         // Send email
         var success = await _emailSender.Send(email, token);

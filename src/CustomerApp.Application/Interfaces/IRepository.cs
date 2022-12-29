@@ -14,9 +14,10 @@ public interface IRepository
 
     Task<bool> DoesEmailAlreadyExist(Email email, CancellationToken ct);
 
-    Task Save(Customer customer, CancellationToken ct);
-    Task Save(LoginAttempt loginAttempt, CancellationToken ct);
-    Task Save(ResetPasswordResource resetPasswordResource, CancellationToken ct);
+    Task Insert(Customer customer, CancellationToken ct);
+    Task Update(Customer customer, CancellationToken ct);
+    Task Upsert(LoginAttempt loginAttempt, CancellationToken ct);
+    Task Upsert(ResetPasswordResource resetPasswordResource, CancellationToken ct);
     Task DeleteCustomer(CustomerId customerId, CancellationToken ct);
     Task DeleteResetPasswordResource(CustomerId customerId, CancellationToken ct);
     Task<ResetPasswordResource?> GetResetPasswordResource(Email email, CancellationToken ct);

@@ -61,7 +61,7 @@ public sealed class ResetPasswordHandler
         if (errorOrCustomer.IsError) return errorOrCustomer.Errors;
 
         // Save customer
-        await _repository.Save(customer, ct);
+        await _repository.Update(customer, ct);
 
         // Delete reset password resource
         await _repository.DeleteResetPasswordResource(resetPasswordResource.Id, ct);
