@@ -103,26 +103,23 @@ public sealed class MongoRepository : IRepository
         return _customersCollection.InsertOneAsync(customerBson, cancellationToken: ct);
     }
 
-    public async Task Save(LoginAttempt loginAttempt, CancellationToken ct)
+    public Task Save(LoginAttempt loginAttempt, CancellationToken ct)
     {
-        var loginAttemptResult = await _loginAttemptsCollection.FindOneAndUpdateAsync(
-            saved => saved.CustomerId == loginAttempt.Id.Value,
-            Builders<LoginAttemptBson>.Update
-                .Set(saved => saved.LastAttemptDate, loginAttempt.LastAttemptDate.Value)
-                .Set(saved => saved.AttemptStatus, loginAttempt.AttemptStatus.Value)
-                .Set(saved => saved.AttemptCount, loginAttempt.AttemptCount.Value),
+        var loginAttemptBson = LoginAttemptBson.From(loginAttempt);
+        return _loginAttemptsCollection.ReplaceOneAsync(
+            saved => saved.CustomerId == loginAttemptBson.CustomerId,
+            loginAttemptBson,
+            new ReplaceOptions { IsUpsert = true },
             cancellationToken: ct);
-        
-        if (loginAttemptResult is null)
-        {
-            var loginAttemptBson = LoginAttemptBson.From(loginAttempt);
-            await _loginAttemptsCollection.InsertOneAsync(loginAttemptBson, cancellationToken: ct);
-        }
     }
 
     public Task Save(ResetPasswordResource resetPasswordResource, CancellationToken ct)
     {
-        var resetPassordBson = ResetPasswordBson.From(resetPasswordResource);
-        return _resetPasswordsCollection.InsertOneAsync(resetPassordBson, cancellationToken: ct);
+        var resetPasswordBson = ResetPasswordBson.From(resetPasswordResource);
+        return _resetPasswordsCollection.ReplaceOneAsync(
+            saved => saved.CustomerId == resetPasswordBson.CustomerId,
+            resetPasswordBson,
+            new ReplaceOptions { IsUpsert = true },
+            cancellationToken: ct);
     }
 }

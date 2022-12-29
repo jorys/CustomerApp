@@ -31,7 +31,6 @@ Local SMTP server is accessible through http://localhost:3000
 
 ## Next features to be implemented
 
-- Replace InMemoryRepository by local database
 - Manage concurrency (optimist update, auto retry)
 - Add Unit and Integration Tests
 - External API call with circuit breaker example
