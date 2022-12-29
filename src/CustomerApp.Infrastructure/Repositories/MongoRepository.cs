@@ -5,8 +5,6 @@ using CustomerApp.Domain.Common.ValueObjects;
 using CustomerApp.Domain.LoginAttemptAggregate;
 using CustomerApp.Domain.ValueObjects;
 using CustomerApp.Infrastructure.Repositories.Models;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
 namespace CustomerApp.Infrastructure.Repositories;
@@ -123,7 +121,7 @@ public sealed class MongoRepository : IRepository
         var customerBson = CustomerBson.From(customer);
         return _customersCollection.ReplaceOneAsync(
             saved => saved.CustomerId == customerBson.CustomerId,
-            customerBson, 
+            customerBson,
             cancellationToken: ct);
     }
 
