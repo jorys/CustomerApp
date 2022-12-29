@@ -55,7 +55,11 @@ public sealed class RegisterHandler
         }
 
         // Save in database
-        await _repository.Insert(customer, ct);
+        var isSuccess = await _repository.Insert(customer, ct);
+        if (!isSuccess)
+        {
+            return Error.Conflict("Email.AlreadyExist", "A customer with same email already exist.");
+        }
 
         // Generate JWT token
         var jwtToken = _jwtTokenGenerator.GenerateToken(

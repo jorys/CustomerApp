@@ -14,7 +14,7 @@ public interface IRepository
 
     Task<bool> DoesEmailAlreadyExist(Email email, CancellationToken ct);
 
-    Task Insert(Customer customer, CancellationToken ct);
+    Task<bool> Insert(Customer customer, CancellationToken ct);
     Task Update(Customer customer, CancellationToken ct);
     Task Upsert(LoginAttempt loginAttempt, CancellationToken ct);
     Task Upsert(ResetPasswordResource resetPasswordResource, CancellationToken ct);

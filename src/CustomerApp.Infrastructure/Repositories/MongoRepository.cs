@@ -5,6 +5,7 @@ using CustomerApp.Domain.Common.ValueObjects;
 using CustomerApp.Domain.LoginAttemptAggregate;
 using CustomerApp.Domain.ValueObjects;
 using CustomerApp.Infrastructure.Repositories.Models;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
@@ -94,11 +95,27 @@ public sealed class MongoRepository : IRepository
         return resetPasswordsBson.ToDomain();
     }
 
-    public Task Insert(Customer customer, CancellationToken ct)
+    // To manage concurrency, insert only if email does not exist
+    public async Task<bool> Insert(Customer customer, CancellationToken ct)
     {
-        // TODO: to manage concurrency, check if email already exists on insert
-        var customerBson = CustomerBson.From(customer);
-        return _customersCollection.InsertOneAsync(customerBson, cancellationToken: ct);
+        var updateResult = await _customersCollection.UpdateOneAsync(
+            saved => saved.Email == customer.Email.Value,
+            Builders<CustomerBson>.Update
+                .SetOnInsert(c => c.CustomerId, customer.Id.Value)
+                .SetOnInsert(c => c.FirstName, customer.FirstName.Value)
+                .SetOnInsert(c => c.LastName, customer.LastName.Value)
+                .SetOnInsert(c => c.Birthdate, customer.Birthdate.Value)
+                .SetOnInsert(c => c.Email, customer.Email.Value)
+                .SetOnInsert(c => c.HashedPassword, customer.HashedPassword.Value)
+                .SetOnInsert(c => c.CustomerStatus, customer.Status.Value)
+                .SetOnInsert(c => c.Address.Street, customer.Address.Street)
+                .SetOnInsert(c => c.Address.City, customer.Address.City)
+                .SetOnInsert(c => c.Address.PostCode, customer.Address.PostCode)
+                .SetOnInsert(c => c.Address.Country, customer.Address.Country),
+            new UpdateOptions { IsUpsert = true },
+            cancellationToken: ct);
+
+        return updateResult.MatchedCount == 0;
     }
 
     public Task Update(Customer customer, CancellationToken ct)
