@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerApp.RestApi", "CustomerApp.RestApi\CustomerApp.RestApi.csproj", "{CF86BE49-2445-4478-913A-2C49EE1D64DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerApp.RestApi", "src\CustomerApp.RestApi\CustomerApp.RestApi.csproj", "{CF86BE49-2445-4478-913A-2C49EE1D64DE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerApp.Application", "CustomerApp.Application\CustomerApp.Application.csproj", "{929708EC-81CE-48C2-A1CB-383A17998DDC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerApp.Application", "src\CustomerApp.Application\CustomerApp.Application.csproj", "{929708EC-81CE-48C2-A1CB-383A17998DDC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerApp.Domain", "CustomerApp.Domain\CustomerApp.Domain.csproj", "{4CA2C5BC-582E-41B9-A12D-1FBA6A532B27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerApp.Domain", "src\CustomerApp.Domain\CustomerApp.Domain.csproj", "{4CA2C5BC-582E-41B9-A12D-1FBA6A532B27}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{45B8A70B-714C-4758-9C0D-EA7DA6C6E76C}"
 	ProjectSection(SolutionItems) = preProject
@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerApp.Infrastructure", "CustomerApp.Infrastructure\CustomerApp.Infrastructure.csproj", "{115856C9-E1F7-4568-8EF2-A2EA182DE8A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerApp.Infrastructure", "src\CustomerApp.Infrastructure\CustomerApp.Infrastructure.csproj", "{115856C9-E1F7-4568-8EF2-A2EA182DE8A5}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{01F214C7-EF43-41BF-97A8-A24EC2E87AB3}"
 EndProject
