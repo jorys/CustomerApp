@@ -1,6 +1,5 @@
 ﻿using CustomerApp.Domain.Aggregates.CustomerStocks;
 using MongoDB.Bson.Serialization.Attributes;
-using System.Linq;
 
 namespace CustomerApp.Infrastructure.Repositories.Models;
 
@@ -32,11 +31,11 @@ internal sealed class StocksBson
                     quantity: stockItem.Value.Value
                     )).ToArray());
 
-    internal Stocks ToDomain(StocksBson stocks) =>
+    internal Stocks ToDomain() =>
         Stocks.ReloadFromRepository(
-            customerId: stocks.CustomerId,
-            stocksVersion: stocks.StocksVersion,
-            stockItems: stocks.StockItems.ToDictionary(
+            customerId: CustomerId,
+            stocksVersion: StocksVersion,
+            stockItems: StockItems.ToDictionary(
                 stockItem => stockItem.Name,
                 stockItem => stockItem.Quantity));
 }

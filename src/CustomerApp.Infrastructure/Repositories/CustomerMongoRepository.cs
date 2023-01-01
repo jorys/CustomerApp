@@ -1,5 +1,6 @@
-﻿using CustomerApp.Application.Handlers.Customers.Interfaces;
+﻿using CustomerApp.Application.Common.Interfaces;
 using CustomerApp.Domain.Aggregates.Customers;
+using CustomerApp.Domain.Common.ValueObjects;
 using CustomerApp.Domain.ValueObjects;
 using CustomerApp.Infrastructure.Repositories.Models;
 using MongoDB.Driver;
@@ -14,6 +15,16 @@ public sealed class CustomerMongoRepository : ICustomerRepository
     {
         var customerDb = mongoClient.GetDatabase(MongoDatabaseNames.CustomerDb);
         _customersCollection = customerDb.GetCollection<CustomerBson>(MongoDatabaseNames.CustomersCollectionName);
+    }
+
+    public async Task<Customer?> GetCustomer(Email email, CancellationToken ct)
+    {
+        var customerBson = await _customersCollection
+            .Find(customer => customer.Email == email.Value)
+            .SingleOrDefaultAsync(ct);
+
+        if (customerBson == null) return null;
+        return customerBson.ToDomain();
     }
 
     public async Task<Customer?> GetCustomer(CustomerId customerId, CancellationToken ct)

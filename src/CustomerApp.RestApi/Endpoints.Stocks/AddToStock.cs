@@ -8,7 +8,7 @@ using System.Net;
 
 namespace CustomerApp.RestApi.Endpoints.CustomerStocks;
 
-[Route($"{BaseUrl}/customer")]
+[Route($"{BaseUrl}/stock/add-items")]
 public class AddToStock : AuthenticatedControllerBase
 {
     readonly AddToStockHandler _commandHandler;
@@ -19,8 +19,8 @@ public class AddToStock : AuthenticatedControllerBase
         _commandHandler = commandHandler;
     }
 
-    [HttpPatch]
-    [Tags(SwaggerTags.Customer)]
+    [HttpPost]
+    [Tags(SwaggerTags.Stock)]
     [SwaggerResponse((int)HttpStatusCode.OK, type: typeof(StocksResponse))]
     [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
     [SwaggerResponse((int)HttpStatusCode.BadRequest)]

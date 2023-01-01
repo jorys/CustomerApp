@@ -1,6 +1,6 @@
-﻿using CustomerApp.Application.Handlers.Authentication.Interfaces;
+﻿using CustomerApp.Application.Common.Interfaces;
+using CustomerApp.Application.Handlers.Authentication.Interfaces;
 using CustomerApp.Application.Handlers.Authentication.Models;
-using CustomerApp.Application.Interfaces.Repositories;
 using CustomerApp.Domain.Aggregates.Customers;
 using CustomerApp.Domain.Aggregates.Customers.ValueObjects;
 using CustomerApp.Domain.Common;
@@ -14,16 +14,19 @@ public sealed class LoginHandler
 {
     readonly IPasswordHasher _passwordHasher;
     readonly IJwtTokenGenerator _jwtTokenGenerator;
-    readonly ILoginRepository _repository;
+    readonly ILoginAttemptRepository _loginRepository;
+    readonly ICustomerRepository _customerRepository;
 
     public LoginHandler(
         IPasswordHasher passwordHasher,
         IJwtTokenGenerator jwtTokenGenerator,
-        ILoginRepository repository)
+        ILoginAttemptRepository loginRepository,
+        ICustomerRepository customerRepository)
     {
         _passwordHasher = passwordHasher;
         _jwtTokenGenerator = jwtTokenGenerator;
-        _repository = repository;
+        _loginRepository = loginRepository;
+        _customerRepository = customerRepository;
     }
 
     public async Task<ErrorOr<AuthenticationResult>> Handle(LoginCommand command, CancellationToken ct)
@@ -33,7 +36,7 @@ public sealed class LoginHandler
         if (errorOrEmail.IsError) return errorOrEmail.Errors;
         var email = errorOrEmail.Value;
 
-        var customer = await _repository.GetCustomer(email, ct);
+        var customer = await _customerRepository.GetCustomer(email, ct);
         if (customer is null) return AuthenticationError;
 
         // Check if account is locked
@@ -52,7 +55,7 @@ public sealed class LoginHandler
         if (errorOrLoginAttemptSuccess.IsError) return AuthenticationError;
         var loginAttemptSuccess = errorOrLoginAttemptSuccess.Value;
 
-        await _repository.Upsert(loginAttemptSuccess, ct);
+        await _loginRepository.Upsert(loginAttemptSuccess, ct);
 
         // Generate JWT token
         var jwtToken = _jwtTokenGenerator.GenerateToken(
@@ -70,7 +73,7 @@ public sealed class LoginHandler
     private async Task<ErrorOr<AuthenticationResult>> HandleLoginFailure(Customer customer, CancellationToken ct)
     {
         // Get last login attempt
-        var lastLoginAttempt = await _repository.GetLastLoginAttempt(customer.Id, ct);
+        var lastLoginAttempt = await _loginRepository.GetLastLoginAttempt(customer.Id, ct);
         var errorOrLoginAttempt = lastLoginAttempt is null
             ? LoginAttempt.CreateFailed(customer.Id)
             : lastLoginAttempt.AttemptFails();
@@ -80,12 +83,12 @@ public sealed class LoginHandler
             errorOrLoginAttempt.FirstError.Code == Errors.MaximumLoginAttemptErrorCode)
         {
             customer.Lock();
-            await _repository.Update(customer, ct);
+            await _customerRepository.Update(customer, ct);
             return AccountLocked;
         }
 
         // Save login attempt
-        await _repository.Upsert(errorOrLoginAttempt.Value, ct);
+        await _loginRepository.Upsert(errorOrLoginAttempt.Value, ct);
 
         return AuthenticationError;
     }

@@ -37,9 +37,11 @@ public sealed class StocksMongoRepository : IStocksRepository
         return stocksBson.ToDomain();
     }
 
-    public Task<bool> InsertStocks(Stocks stocks, CancellationToken ct)
+    // Concurrency managed by collection identifier customerId
+    public Task InsertStocks(Stocks stocks, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var stocksBson = StocksBson.From(stocks);
+        return _stocksCollection.InsertOneAsync(stocksBson, cancellationToken: ct);
     }
 
     // To manage concurrency, check aggregate version

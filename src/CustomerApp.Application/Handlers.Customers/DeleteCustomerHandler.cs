@@ -1,4 +1,4 @@
-﻿using CustomerApp.Application.Handlers.Customers.Interfaces;
+﻿using CustomerApp.Application.Common.Interfaces;
 using CustomerApp.Application.Handlers.Customers.Models;
 using CustomerApp.Domain.ValueObjects;
 using ErrorOr;

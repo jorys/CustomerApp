@@ -8,6 +8,6 @@ public interface IStocksRepository
 {
     Task<bool> DoesCustomerExist(CustomerId customerId, CancellationToken ct);
     Task<Stocks?> GetStocks(CustomerId customerId, CancellationToken ct);
-    Task<bool> InsertStocks(Stocks stocks, CancellationToken ct);
+    Task InsertStocks(Stocks stocks, CancellationToken ct);
     Task<bool> Update(Stocks stocks, StocksVersion previousVersion, CancellationToken ct);
 }
