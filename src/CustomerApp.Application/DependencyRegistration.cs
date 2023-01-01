@@ -25,6 +25,7 @@ public static class DependencyRegistration
 
         services.Configure<ConcurrencyRetrySettings>(configuration.GetSection(nameof(ConcurrencyRetrySettings)));
         services.AddScoped<AddToStockHandler>();
+        services.AddScoped<GetStocksHandler>();
 
         return services;
     }

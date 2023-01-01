@@ -26,11 +26,15 @@ public sealed record StocksResponse
         }
     }
 
-    internal static StocksResponse From(Stocks stocks) =>
-        new(
+    internal static StocksResponse? From(Stocks? stocks)
+    {
+        if (stocks is null) return null;
+        
+        return new(
             stocks: stocks.Items.Select(stockItem => 
                 new StockItemResponse(
                     itemName: stockItem.Key.Value,
                     quantity: stockItem.Value.Value
             )).ToArray());
+    }
 }

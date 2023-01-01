@@ -1,4 +1,5 @@
 using CustomerApp.Application.Handlers.CustomerStocks;
+using CustomerApp.Application.Handlers.CustomerStocks.Models;
 using CustomerApp.RestApi.Common;
 using CustomerApp.RestApi.Endpoints.CustomerStocks.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -8,27 +9,27 @@ using System.Net;
 
 namespace CustomerApp.RestApi.Endpoints.CustomerStocks;
 
-[Route($"{BaseUrl}/stocks/add-items")]
-public class AddToStock : AuthenticatedControllerBase
+[Route($"{BaseUrl}/stocks")]
+public class GetStocks : AuthenticatedControllerBase
 {
-    readonly AddToStockHandler _commandHandler;
+    readonly GetStocksHandler _queryHandler;
 
-    public AddToStock(AddToStockHandler commandHandler, IOptions<ApiBehaviorOptions> apiBehaviorOptions)
+    public GetStocks(GetStocksHandler queryHandler, IOptions<ApiBehaviorOptions> apiBehaviorOptions)
         : base(apiBehaviorOptions)
     {
-        _commandHandler = commandHandler;
+        _queryHandler = queryHandler;
     }
 
-    [HttpPost]
+    [HttpGet]
     [Tags(SwaggerTags.Stock)]
     [SwaggerResponse((int)HttpStatusCode.OK, type: typeof(StocksResponse))]
     [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
     [SwaggerResponse((int)HttpStatusCode.BadRequest)]
     [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
-    public async Task<ActionResult<StocksResponse>> Handle(AddToStockRequest request, CancellationToken ct)
+    public async Task<ActionResult<StocksResponse>> Handle(CancellationToken ct)
     {
-        var command = request.ToCommand(CustomerId);
-        var errorOrStocks = await _commandHandler.Handle(command, ct);
+        var query = new GetStocksQuery(CustomerId);
+        var errorOrStocks = await _queryHandler.Handle(query, ct);
 
         return ToActionResult(
             errorOrStocks, 

@@ -38,7 +38,7 @@ public sealed class Stocks : AggregateRoot<CustomerId>
 
         var newQuantity = previousQuantity.AddToStock(quantityToAdd);
 
-        _items.Add(name, newQuantity);
+        _items[name] = newQuantity;
         Version = StocksVersion.CreateNew();
 
         return this;

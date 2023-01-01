@@ -45,22 +45,17 @@ public sealed class StocksMongoRepository : IStocksRepository
     }
 
     // To manage concurrency, check aggregate version
-    public async Task<bool> Update(Stocks stocks, CancellationToken ct)
+    public async Task<bool> Update(Stocks stocks, StocksVersion previousVersion, CancellationToken ct)
     {
         var stocksBson = StocksBson.From(stocks);
         var replaceOneResult = await _stocksCollection.ReplaceOneAsync(
             saved =>
                 saved.CustomerId == stocksBson.CustomerId &&
-                saved.StocksVersion == stocksBson.StocksVersion,
+                saved.StocksVersion == previousVersion.Value,
             stocksBson,
             cancellationToken: ct);
 
         if (replaceOneResult.ModifiedCount == 0) return false;
         return true;
-    }
-
-    public Task<bool> Update(Stocks stocks, StocksVersion previousVersion, CancellationToken ct)
-    {
-        throw new NotImplementedException();
     }
 }
