@@ -29,6 +29,8 @@ public sealed class Stocks : AggregateRoot<CustomerId>
 
     public ErrorOr<Stocks> AddToStock(string itemName, int quantityToAdd)
     {
+        if (quantityToAdd < 1) return Errors.MustBePositive("Quantity");
+
         var errorOrItemName = ItemName.Create(itemName);
         if (errorOrItemName.IsError) return errorOrItemName.Errors;
         var name = errorOrItemName.Value;
@@ -43,6 +45,27 @@ public sealed class Stocks : AggregateRoot<CustomerId>
 
         return this;
     }
+
+    public ErrorOr<Stocks> RemoveFromStock(string itemName, int quantityToRemove)
+    {
+        if (quantityToRemove < 1) return Errors.MustBePositive("Quantity");
+
+        var errorOrItemName = ItemName.Create(itemName);
+        if (errorOrItemName.IsError) return errorOrItemName.Errors;
+        var name = errorOrItemName.Value;
+
+        var previousQuantity = _items.GetValueOrDefault(name)
+            ?? ItemQuantity.Create();
+
+        var errorOrNewQuantity = previousQuantity.RemoveFromStock(quantityToRemove);
+        if (errorOrNewQuantity.IsError) return errorOrNewQuantity.Errors;
+
+        _items[name] = errorOrNewQuantity.Value;
+        Version = StocksVersion.CreateNew();
+
+        return this;
+    }
+
     public static Stocks ReloadFromRepository(Guid customerId, Guid stocksVersion, Dictionary<string, int> stockItems) =>
         new(
             customerId: CustomerId.ReloadFromRepository(customerId),

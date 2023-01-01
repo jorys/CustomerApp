@@ -23,9 +23,10 @@ public static class DependencyRegistration
         services.AddScoped<UpdateCustomerHandler>();
         services.AddScoped<UpdatePasswordHandler>();
 
+        services.AddScoped<GetStocksHandler>();
         services.Configure<ConcurrencyRetrySettings>(configuration.GetSection(nameof(ConcurrencyRetrySettings)));
         services.AddScoped<AddToStockHandler>();
-        services.AddScoped<GetStocksHandler>();
+        services.AddScoped<RemoveFromStockHandler>();
 
         return services;
     }

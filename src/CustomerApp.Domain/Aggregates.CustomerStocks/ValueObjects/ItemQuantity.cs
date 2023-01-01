@@ -21,7 +21,7 @@ public sealed class ItemQuantity : ValueObject
         var stockAfter = Value - quantity;
         if (stockAfter < 0)
         {
-            return Errors.CannotBeNegative(nameof(Value));
+            return Errors.CannotBeNegative(nameof(ItemQuantity));
         }
         return new ItemQuantity(stockAfter);
     }

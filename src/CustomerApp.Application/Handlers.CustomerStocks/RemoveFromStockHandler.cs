@@ -6,21 +6,22 @@ using ErrorOr;
 using Microsoft.Extensions.Options;
 using CustomerApp.Domain.Aggregates.CustomerStocks;
 using CustomerApp.Domain.Common;
+using CustomerApp.Domain.Aggregates.CustomerStocks.ValueObjects;
 
 namespace CustomerApp.Application.Handlers.CustomerStocks;
 
-public sealed class AddToStockHandler
+public sealed class RemoveFromStockHandler
 {
     readonly IStocksRepository _repository;
     readonly ConcurrencyRetrySettings _settings;
 
-    public AddToStockHandler(IStocksRepository repository, IOptions<ConcurrencyRetrySettings> options)
+    public RemoveFromStockHandler(IStocksRepository repository, IOptions<ConcurrencyRetrySettings> options)
     {
         _repository = repository;
         _settings = options.Value;
     }
 
-    public async Task<ErrorOr<Stocks>> Handle(AddToStockCommand command, CancellationToken ct, int tryCount = 1)
+    public async Task<ErrorOr<Stocks>> Handle(RemoveFromStockCommand command, CancellationToken ct, int tryCount = 1)
     {
         // Create customerId
         var errorOrCustomerId = CustomerId.Create(command.CustomerId);
@@ -34,20 +35,14 @@ public sealed class AddToStockHandler
         // Get saved stocks
         var stocks = await _repository.GetStocks(customerId, ct);
 
-        // To test concurrency, add delay
-        //await Task.Delay(3000);
-
-        // Create new if not exist
-        if (stocks is null)
-        {
-            return await InsertStocks(customerId, command, ct);
-        }
+        // Not enough stock
+        if (stocks is null) return Errors.CannotBeNegative(nameof(ItemQuantity));
 
         // Keep previous version
         var previousVersion = stocks.Version;
 
         // Update
-        var errorOrStocks = stocks.AddToStock(command.ItemName, command.Quantity);
+        var errorOrStocks = stocks.RemoveFromStock(command.ItemName, command.Quantity);
         if (errorOrStocks.IsError) return errorOrStocks.Errors;
 
         // Insert into
@@ -63,19 +58,5 @@ public sealed class AddToStockHandler
         {
             return Errors.MaxConcurrencyRetries("Stocks");
         }
-    }
-
-    async Task<ErrorOr<Stocks>> InsertStocks(CustomerId customerId, AddToStockCommand command, CancellationToken ct)
-    {
-        var errorOrStocks = Stocks
-            .Create(customerId)
-            .AddToStock(itemName: command.ItemName,
-            quantityToAdd: command.Quantity);
-
-        if (errorOrStocks.IsError) return errorOrStocks.Errors;
-        var stocks = errorOrStocks.Value;
-
-        await _repository.InsertStocks(stocks, ct);
-        return stocks;
     }
 }

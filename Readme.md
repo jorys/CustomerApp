@@ -6,7 +6,7 @@ This is an example of DDD-CQRS-Clean based architecture.
 
 <img src="./docs/CleanArchitecture.jpg" alt="drawing" width="300"/>
 
-2 types of routes:
+Types of routes:
 - Authentication
 	- Register: allows to create a customer and generate a bearer token. Password is saved hashed and salted (not decryptable).
 	- Login: check email and password, generates a bearer token
@@ -17,10 +17,15 @@ This is an example of DDD-CQRS-Clean based architecture.
 	- Patch customer: only filled fields will be updated
 	- Put password: allows to update password
 	- Delete customer
+- Stock
+	- Get stocks
+	- Add-Items: to increase an item quantity
+	- Remove-Items: to decrease an item quantity
 
 ### Concurrency
 
 On register, repository check that email does not exist on insert.
+On stock management, there is an optimistic update: thanks to saved version, we are able to know if resource has changed and needs a retry
 
 ### Architecture details
 

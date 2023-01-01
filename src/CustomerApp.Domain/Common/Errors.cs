@@ -62,8 +62,23 @@ public static class Errors
             $"{fieldName}.{nameof(DateShouldBeInFuture)}",
             $"{fieldName} should be in future.");
 
-    internal static Error CannotBeNegative(string fieldName) =>
+    public static Error CannotBeNegative(string fieldName) =>
         Error.Validation(
             $"{fieldName}.{nameof(CannotBeNegative)}",
             $"{fieldName} cannot be negative.");
+
+    public static Error NotFound(string fieldName) =>
+        Error.Validation(
+            $"{fieldName}.{nameof(NotFound)}",
+            $"{fieldName} was not found.");
+
+    public static Error MaxConcurrencyRetries(string fieldName) =>
+        Error.Failure(
+            $"{fieldName}.{nameof(MaxConcurrencyRetries)}",
+            $"Unable to update {fieldName}, even with retries policy, due to concurrent access.");
+
+    internal static Error MustBePositive(string fieldName) =>
+        Error.Failure(
+            $"{fieldName}.{nameof(MustBePositive)}",
+            $"{fieldName} must be positive value.");
 }
