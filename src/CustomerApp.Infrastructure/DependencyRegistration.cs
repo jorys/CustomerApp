@@ -1,4 +1,6 @@
-﻿using CustomerApp.Application.Interfaces;
+﻿using CustomerApp.Application.Common.Interfaces;
+using CustomerApp.Application.Handlers.Authentication.Interfaces;
+using CustomerApp.Application.Handlers.CustomerStocks.Interfaces;
 using CustomerApp.Infrastructure.EmailSenders;
 using CustomerApp.Infrastructure.JwtTokenGenerators;
 using CustomerApp.Infrastructure.PasswordHashers;
@@ -73,7 +75,12 @@ public static class DependencyRegistration
                );
 
         services.AddSingleton<IMongoClient>(_ => new MongoClient(connectionString));
-        services.AddScoped<IRepository, MongoRepository>();
+        
+        services.AddScoped<ICustomerRepository, CustomerMongoRepository>();
+        services.AddScoped<ILoginAttemptRepository, LoginAttemptMongoRepository>();
+        services.AddScoped<IRegisterRepository, RegisterMongoRepository>();
+        services.AddScoped<IResetPasswordRepository, ResetPasswordMongoRepository>();
+        services.AddScoped<IStocksRepository, StocksMongoRepository>();
 
         BsonSerializer.RegisterSerializer(new DateOnlySerializer());
 

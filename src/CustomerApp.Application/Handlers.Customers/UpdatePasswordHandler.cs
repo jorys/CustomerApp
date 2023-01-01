@@ -1,5 +1,6 @@
-﻿using CustomerApp.Application.Handlers.Customers.Models;
-using CustomerApp.Application.Interfaces;
+﻿using CustomerApp.Application.Common.Interfaces;
+using CustomerApp.Application.Handlers.Authentication.Interfaces;
+using CustomerApp.Application.Handlers.Customers.Models;
 using CustomerApp.Domain.Aggregates.Customers;
 using CustomerApp.Domain.Aggregates.Customers.ValueObjects;
 using CustomerApp.Domain.ValueObjects;
@@ -9,10 +10,10 @@ namespace CustomerApp.Application.Handlers.Customers;
 
 public sealed class UpdatePasswordHandler
 {
-    readonly IRepository _repository;
+    readonly ICustomerRepository _repository;
     readonly IPasswordHasher _passwordHasher;
 
-    public UpdatePasswordHandler(IRepository repository, IPasswordHasher passwordHasher)
+    public UpdatePasswordHandler(ICustomerRepository repository, IPasswordHasher passwordHasher)
     {
         _repository = repository;
         _passwordHasher = passwordHasher;

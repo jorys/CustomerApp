@@ -11,7 +11,7 @@ public sealed class AttemptDate : ValueObject
         Value = value;
     }
 
-    public static AttemptDate Create()
+    internal static AttemptDate Create()
     {
         return new AttemptDate(DateTime.UtcNow);
     }

@@ -1,7 +1,7 @@
 ﻿using CustomerApp.Domain.Aggregates.Customers.ValueObjects;
 using CustomerApp.Domain.ValueObjects;
 
-namespace CustomerApp.Application.Interfaces;
+namespace CustomerApp.Application.Handlers.Authentication.Interfaces;
 
 public interface IPasswordHasher
 {

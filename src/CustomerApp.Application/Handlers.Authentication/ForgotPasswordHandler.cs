@@ -1,6 +1,7 @@
-﻿using CustomerApp.Application.Handlers.Authentication.Models;
-using CustomerApp.Application.Interfaces;
-using CustomerApp.Application.Settings;
+﻿using CustomerApp.Application.Common.Interfaces;
+using CustomerApp.Application.Handlers.Authentication.Interfaces;
+using CustomerApp.Application.Handlers.Authentication.Models;
+using CustomerApp.Application.Handlers.Authentication.Settings;
 using CustomerApp.Domain.Aggregates.ResetPasswords;
 using CustomerApp.Domain.Aggregates.ResetPasswords.ValueObjects;
 using CustomerApp.Domain.Common.ValueObjects;
@@ -12,20 +13,23 @@ namespace CustomerApp.Application.Handlers.Authentication;
 
 public sealed class ForgotPasswordHandler
 {
-    readonly IRepository _repository;
+    readonly IResetPasswordRepository _resetPasswordRepository;
+    readonly ICustomerRepository _customerRepository;
     readonly ITokenGenerator _tokenGenerator;
     readonly ResetPasswordSettings _settings;
     readonly IEmailSender _emailSender;
     readonly ILogger _logger;
 
     public ForgotPasswordHandler(
-        IRepository repository,
+        IResetPasswordRepository resetPasswordRepository,
+        ICustomerRepository customerRepository,
         ITokenGenerator tokenGenerator,
         IOptions<ResetPasswordSettings> options,
         IEmailSender emailSender,
         ILogger<ForgotPasswordHandler> logger)
     {
-        _repository = repository;
+        _resetPasswordRepository = resetPasswordRepository;
+        _customerRepository = customerRepository;
         _tokenGenerator = tokenGenerator;
         _settings = options.Value;
         _emailSender = emailSender;
@@ -39,7 +43,7 @@ public sealed class ForgotPasswordHandler
         if (errorOrEmail.IsError) return errorOrEmail.Errors;
         var email = errorOrEmail.Value;
 
-        var customer = await _repository.GetCustomer(email, ct);
+        var customer = await _customerRepository.GetCustomer(email, ct);
         
         // If user does not exist, do nothing
         if (customer is null) return new Success();
@@ -61,7 +65,7 @@ public sealed class ForgotPasswordHandler
         var resetPassword = errorOrResetPassword.Value;
 
         // Save reset password resource
-        await _repository.Upsert(resetPassword, ct);
+        await _resetPasswordRepository.Upsert(resetPassword, ct);
 
         // Send email
         var success = await _emailSender.Send(email, token);

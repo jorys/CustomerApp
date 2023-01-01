@@ -1,4 +1,4 @@
-﻿using CustomerApp.Application.Interfaces;
+﻿using CustomerApp.Application.Handlers.Authentication.Interfaces;
 using CustomerApp.Domain.Aggregates.ResetPasswords.ValueObjects;
 using CustomerApp.Domain.Common.ValueObjects;
 using Microsoft.AspNetCore.Hosting.Server;

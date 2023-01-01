@@ -18,17 +18,11 @@ public sealed class CustomerStatus : ValueObject
         Value = value;
     }
 
-    public static CustomerStatus CreateActive()
-    {
-        return new CustomerStatus(Active);
-    }
+    internal static CustomerStatus CreateActive() => new(Active);
 
-    public static CustomerStatus CreateLocked()
-    {
-        return new CustomerStatus(Locked);
-    }
+    internal static CustomerStatus CreateLocked() => new(Locked);
 
-    public bool IsLocked() => Value == Locked;
+    internal bool IsLocked() => Value == Locked;
 
     protected override IEnumerable<object> GetEqualityComponents()
     {

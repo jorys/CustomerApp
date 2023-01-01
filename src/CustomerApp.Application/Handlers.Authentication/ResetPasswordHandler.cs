@@ -1,5 +1,6 @@
-﻿using CustomerApp.Application.Handlers.Authentication.Models;
-using CustomerApp.Application.Interfaces;
+﻿using CustomerApp.Application.Common.Interfaces;
+using CustomerApp.Application.Handlers.Authentication.Interfaces;
+using CustomerApp.Application.Handlers.Authentication.Models;
 using CustomerApp.Domain.Aggregates.Customers.ValueObjects;
 using CustomerApp.Domain.Aggregates.ResetPasswords.ValueObjects;
 using CustomerApp.Domain.Common.ValueObjects;
@@ -10,16 +11,19 @@ namespace CustomerApp.Application.Handlers.Authentication;
 
 public sealed class ResetPasswordHandler
 {
-    readonly IRepository _repository;
+    readonly IResetPasswordRepository _resetPasswordRepository;
+    readonly ICustomerRepository _customerRepository;
     readonly IPasswordHasher _passwordHasher;
     readonly ILogger _logger;
 
     public ResetPasswordHandler(
-        IRepository repository,
+        IResetPasswordRepository resetPasswordRepository,
+        ICustomerRepository customerRepository,
         IPasswordHasher passwordHasher,
         ILogger<ResetPasswordHandler> logger)
     {
-        _repository = repository;
+        _resetPasswordRepository = resetPasswordRepository;
+        _customerRepository = customerRepository;
         _passwordHasher = passwordHasher;
         _logger = logger;
     }
@@ -31,7 +35,7 @@ public sealed class ResetPasswordHandler
         if (errorOrEmail.IsError) return errorOrEmail.Errors;
         var email = errorOrEmail.Value;
 
-        var resetPasswordResource = await _repository.GetResetPasswordResource(email, ct);
+        var resetPasswordResource = await _resetPasswordRepository.GetResetPasswordResource(email, ct);
 
         // Check reset password resource exists
         if (resetPasswordResource is null) return GetInvalidTokenError(new { email.Value });
@@ -54,17 +58,17 @@ public sealed class ResetPasswordHandler
         var hashedPassword = _passwordHasher.Hash(password);
 
         // Update customer password
-        var customer = await _repository.GetCustomer(resetPasswordResource.Id, ct);
+        var customer = await _customerRepository.GetCustomer(resetPasswordResource.Id, ct);
         if (customer is null) return GetInvalidTokenError(new { customerId = resetPasswordResource.Id });
 
         var errorOrCustomer = customer.UpdatePassword(hashedPassword);
         if (errorOrCustomer.IsError) return errorOrCustomer.Errors;
 
         // Save customer
-        await _repository.Update(customer, ct);
+        await _customerRepository.Update(customer, ct);
 
         // Delete reset password resource
-        await _repository.DeleteResetPasswordResource(resetPasswordResource.Id, ct);
+        await _resetPasswordRepository.DeleteResetPasswordResource(resetPasswordResource.Id, ct);
 
         return new Success();
     }

@@ -1,7 +1,7 @@
 ﻿using CustomerApp.Domain.Aggregates.ResetPasswords.ValueObjects;
 using CustomerApp.Domain.Common.ValueObjects;
 
-namespace CustomerApp.Application.Interfaces;
+namespace CustomerApp.Application.Handlers.Authentication.Interfaces;
 
 public interface IEmailSender
 {
