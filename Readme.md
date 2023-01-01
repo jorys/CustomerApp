@@ -56,6 +56,7 @@ Local SMTP server is accessible through http://localhost:3000
 
 ## Next features to be implemented
 
-- Stock: manage idempotent calls (idempotency identifier)
 - External API call with circuit breaker example
+- Stock: manage idempotent calls (idempotency identifier)
 - Add Unit and Integration Tests (gherkin)
+- Add example of choreography (through events)
