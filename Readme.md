@@ -17,7 +17,7 @@ Types of routes:
 	- Patch customer: only filled fields will be updated
 	- Put password: allows to update password
 	- Delete customer
-- Stock
+- Stock (concurrent access)
 	- Get stocks
 	- Add-Items: to increase an item quantity
 	- Remove-Items: to decrease an item quantity
@@ -56,5 +56,6 @@ Local SMTP server is accessible through http://localhost:3000
 
 ## Next features to be implemented
 
+- Stock: manage idempotent calls (idempotency identifier)
 - External API call with circuit breaker example
 - Add Unit and Integration Tests (gherkin)
