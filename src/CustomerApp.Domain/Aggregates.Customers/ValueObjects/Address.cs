@@ -22,7 +22,7 @@ public sealed class Address : ValueObject
         Country = country;
     }
 
-    public static ErrorOr<Address> Create(string street, string city, int postCode, string country)
+    internal static ErrorOr<Address> Create(string street, string city, int postCode, string country)
     {
         var errors = new List<Error>(4);
         if (string.IsNullOrWhiteSpace(street))
@@ -51,7 +51,7 @@ public sealed class Address : ValueObject
             country: formattedCountry);
     }
 
-    public ErrorOr<Address> With(string? street, string? city, int? postCode, string? country)
+    internal ErrorOr<Address> With(string? street, string? city, int? postCode, string? country)
     {
         return Create(
             street: street ?? Street,

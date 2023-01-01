@@ -1,4 +1,4 @@
-﻿using CustomerApp.Application.Interfaces;
+﻿using CustomerApp.Application.Handlers.Authentication.Interfaces;
 using CustomerApp.Domain.Aggregates.Customers.ValueObjects;
 using CustomerApp.Domain.ValueObjects;
 using ErrorOr;

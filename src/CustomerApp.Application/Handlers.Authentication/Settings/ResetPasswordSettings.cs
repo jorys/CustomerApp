@@ -1,4 +1,4 @@
-﻿namespace CustomerApp.Application.Settings;
+﻿namespace CustomerApp.Application.Handlers.Authentication.Settings;
 
 public sealed class ResetPasswordSettings
 {

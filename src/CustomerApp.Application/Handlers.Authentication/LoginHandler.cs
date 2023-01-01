@@ -1,5 +1,6 @@
-﻿using CustomerApp.Application.Handlers.Authentication.Models;
-using CustomerApp.Application.Interfaces;
+﻿using CustomerApp.Application.Handlers.Authentication.Interfaces;
+using CustomerApp.Application.Handlers.Authentication.Models;
+using CustomerApp.Application.Interfaces.Repositories;
 using CustomerApp.Domain.Aggregates.Customers;
 using CustomerApp.Domain.Aggregates.Customers.ValueObjects;
 using CustomerApp.Domain.Common;
@@ -13,12 +14,12 @@ public sealed class LoginHandler
 {
     readonly IPasswordHasher _passwordHasher;
     readonly IJwtTokenGenerator _jwtTokenGenerator;
-    readonly IRepository _repository;
+    readonly ILoginRepository _repository;
 
     public LoginHandler(
         IPasswordHasher passwordHasher,
         IJwtTokenGenerator jwtTokenGenerator,
-        IRepository repository)
+        ILoginRepository repository)
     {
         _passwordHasher = passwordHasher;
         _jwtTokenGenerator = jwtTokenGenerator;

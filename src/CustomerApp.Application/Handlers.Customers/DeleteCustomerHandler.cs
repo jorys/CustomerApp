@@ -1,5 +1,5 @@
-﻿using CustomerApp.Application.Handlers.Customers.Models;
-using CustomerApp.Application.Interfaces;
+﻿using CustomerApp.Application.Handlers.Customers.Interfaces;
+using CustomerApp.Application.Handlers.Customers.Models;
 using CustomerApp.Domain.ValueObjects;
 using ErrorOr;
 
@@ -7,9 +7,9 @@ namespace CustomerApp.Application.Handlers.Customers;
 
 public sealed class DeleteCustomerHandler
 {
-    readonly IRepository _repository;
+    readonly ICustomerRepository _repository;
 
-    public DeleteCustomerHandler(IRepository repository)
+    public DeleteCustomerHandler(ICustomerRepository repository)
     {
         _repository = repository;
     }

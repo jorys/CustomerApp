@@ -1,5 +1,5 @@
-﻿using CustomerApp.Application.Handlers.Customers.Models;
-using CustomerApp.Application.Interfaces;
+﻿using CustomerApp.Application.Handlers.Customers.Interfaces;
+using CustomerApp.Application.Handlers.Customers.Models;
 using CustomerApp.Domain.Aggregates.Customers;
 using CustomerApp.Domain.ValueObjects;
 using ErrorOr;
@@ -8,9 +8,9 @@ namespace CustomerApp.Application.Handlers.Customers;
 
 public sealed class GetCustomerHandler
 {
-    readonly IRepository _repository;
+    readonly ICustomerRepository _repository;
 
-    public GetCustomerHandler(IRepository repository)
+    public GetCustomerHandler(ICustomerRepository repository)
     {
         _repository = repository;
     }

@@ -1,5 +1,5 @@
-﻿using CustomerApp.Application.Handlers.Authentication.Models;
-using CustomerApp.Application.Interfaces;
+﻿using CustomerApp.Application.Handlers.Authentication.Interfaces;
+using CustomerApp.Application.Handlers.Authentication.Models;
 using CustomerApp.Domain.Aggregates.Customers;
 using CustomerApp.Domain.Aggregates.Customers.ValueObjects;
 using ErrorOr;
@@ -10,12 +10,12 @@ public sealed class RegisterHandler
 {
     readonly IPasswordHasher _passwordHasher;
     readonly IJwtTokenGenerator _jwtTokenGenerator;
-    readonly IRepository _repository;
+    readonly IRegisterRepository _repository;
 
     public RegisterHandler(
         IPasswordHasher passwordHasher,
         IJwtTokenGenerator jwtTokenGenerator,
-        IRepository repository)
+        IRegisterRepository repository)
     {
         _passwordHasher = passwordHasher;
         _jwtTokenGenerator = jwtTokenGenerator;

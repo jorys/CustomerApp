@@ -1,6 +1,6 @@
-﻿using CustomerApp.Application.Handlers.Authentication.Models;
-using CustomerApp.Application.Interfaces;
-using CustomerApp.Application.Settings;
+﻿using CustomerApp.Application.Handlers.Authentication.Interfaces;
+using CustomerApp.Application.Handlers.Authentication.Models;
+using CustomerApp.Application.Handlers.Authentication.Settings;
 using CustomerApp.Domain.Aggregates.ResetPasswords;
 using CustomerApp.Domain.Aggregates.ResetPasswords.ValueObjects;
 using CustomerApp.Domain.Common.ValueObjects;
@@ -12,14 +12,14 @@ namespace CustomerApp.Application.Handlers.Authentication;
 
 public sealed class ForgotPasswordHandler
 {
-    readonly IRepository _repository;
+    readonly IResetPasswordRepository _repository;
     readonly ITokenGenerator _tokenGenerator;
     readonly ResetPasswordSettings _settings;
     readonly IEmailSender _emailSender;
     readonly ILogger _logger;
 
     public ForgotPasswordHandler(
-        IRepository repository,
+        IResetPasswordRepository repository,
         ITokenGenerator tokenGenerator,
         IOptions<ResetPasswordSettings> options,
         IEmailSender emailSender,

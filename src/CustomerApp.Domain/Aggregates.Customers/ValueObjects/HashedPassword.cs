@@ -11,7 +11,7 @@ public sealed class HashedPassword : ValueObject
         Value = value;
     }
 
-    public static ErrorOr<HashedPassword> Create(string value)
+    internal static ErrorOr<HashedPassword> Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {

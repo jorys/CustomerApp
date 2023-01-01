@@ -61,4 +61,9 @@ public static class Errors
         Error.Validation(
             $"{fieldName}.{nameof(DateShouldBeInFuture)}",
             $"{fieldName} should be in future.");
+
+    internal static Error CannotBeNegative(string fieldName) =>
+        Error.Validation(
+            $"{fieldName}.{nameof(CannotBeNegative)}",
+            $"{fieldName} cannot be negative.");
 }

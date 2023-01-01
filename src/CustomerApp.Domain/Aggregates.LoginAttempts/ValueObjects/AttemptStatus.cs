@@ -14,20 +14,9 @@ public sealed class AttemptStatus : ValueObject
         Value = value;
     }
 
-    public static AttemptStatus CreateSuccess()
-    {
-        return new AttemptStatus(Success);
-    }
+    internal static AttemptStatus CreateSuccess() => new(Success);
 
-    public static AttemptStatus CreateFailed()
-    {
-        return new AttemptStatus(Failed);
-    }
-
-    public bool IsSuccess()
-    {
-        return Value == Success;
-    }
+    internal static AttemptStatus CreateFailed() => new(Failed);
 
     protected override IEnumerable<object> GetEqualityComponents()
     {

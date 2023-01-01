@@ -13,7 +13,7 @@ public sealed class Birthdate : ValueObject
         Value = value;
     }
 
-    public static ErrorOr<Birthdate> Create(DateOnly value)
+    internal static ErrorOr<Birthdate> Create(DateOnly value)
     {
         var EighteenYearsAgo = DateOnly.FromDateTime(DateTime.UtcNow);
         if (value > EighteenYearsAgo)

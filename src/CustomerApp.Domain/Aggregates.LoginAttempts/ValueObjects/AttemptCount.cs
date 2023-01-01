@@ -14,12 +14,12 @@ public sealed class AttemptCount : ValueObject
         Value = value;
     }
 
-    public static AttemptCount Create()
+    internal static AttemptCount Create()
     {
         return new AttemptCount(1);
     }
 
-    public ErrorOr<AttemptCount> Increment()
+    internal ErrorOr<AttemptCount> Increment()
     {
         if (Value >= _maxRetryCount)
         {

@@ -1,5 +1,5 @@
-﻿using CustomerApp.Application.Handlers.Authentication.Models;
-using CustomerApp.Application.Interfaces;
+﻿using CustomerApp.Application.Handlers.Authentication.Interfaces;
+using CustomerApp.Application.Handlers.Authentication.Models;
 using CustomerApp.Domain.Aggregates.Customers.ValueObjects;
 using CustomerApp.Domain.Aggregates.ResetPasswords.ValueObjects;
 using CustomerApp.Domain.Common.ValueObjects;
@@ -10,12 +10,12 @@ namespace CustomerApp.Application.Handlers.Authentication;
 
 public sealed class ResetPasswordHandler
 {
-    readonly IRepository _repository;
+    readonly IResetPasswordRepository _repository;
     readonly IPasswordHasher _passwordHasher;
     readonly ILogger _logger;
 
     public ResetPasswordHandler(
-        IRepository repository,
+        IResetPasswordRepository repository,
         IPasswordHasher passwordHasher,
         ILogger<ResetPasswordHandler> logger)
     {

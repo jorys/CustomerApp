@@ -12,7 +12,7 @@ public sealed class FirstName : ValueObject
         Value = value;
     }
 
-    public static ErrorOr<FirstName> Create(string value)
+    internal static ErrorOr<FirstName> Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
