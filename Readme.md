@@ -56,7 +56,5 @@ Local SMTP server is accessible through http://localhost:3000
 
 ## Next features to be implemented
 
-- Add a route that needs concurrency (optimist update, auto retry)
-- Add Unit and Integration Tests
 - External API call with circuit breaker example
-- Event-bus listener API
+- Add Unit and Integration Tests (gherkin)
