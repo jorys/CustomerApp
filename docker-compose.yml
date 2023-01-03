@@ -15,6 +15,7 @@ services:
     ports: 
     - 3000:80
     - 2525:25
+    - 143:143
 
   # Mongo Database
   mongo:

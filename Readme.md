@@ -54,9 +54,15 @@ Local mongo-express is accessible through http://localhost:8081
 
 Local SMTP server is accessible through http://localhost:3000
 
+### How To - Run tests
+
+- Start app without debugging (Ctrl + F5)
+- Run tests (Ctrl + R, A)
+
 ## Next features to be implemented
 
-- External API call with circuit breaker example
-- Stock: manage idempotent calls (idempotency identifier)
 - Add Unit and Integration Tests (gherkin)
+- Stock: manage idempotent calls (idempotency identifier)
 - Add example of choreography (through events)
+- External API call with circuit breaker example
+- Add code first BDD changesets (with Liquibase)
