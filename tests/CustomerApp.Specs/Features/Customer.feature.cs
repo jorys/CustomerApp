@@ -19,7 +19,7 @@ namespace CustomerApp.Specs.Features
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class AuthenticationFeature : object, Xunit.IClassFixture<AuthenticationFeature.FixtureData>, System.IDisposable
+    public partial class CustomerFeature : object, Xunit.IClassFixture<CustomerFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
@@ -28,10 +28,10 @@ namespace CustomerApp.Specs.Features
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "Authentication.feature"
+#line 1 "Customer.feature"
 #line hidden
         
-        public AuthenticationFeature(AuthenticationFeature.FixtureData fixtureData, CustomerApp_Specs_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public CustomerFeature(CustomerFeature.FixtureData fixtureData, CustomerApp_Specs_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -40,7 +40,7 @@ namespace CustomerApp.Specs.Features
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Authentication", null, ProgrammingLanguage.CSharp, featureTags);
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Customer", null, ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -80,14 +80,14 @@ namespace CustomerApp.Specs.Features
             this.TestTearDown();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Customer login")]
-        [Xunit.TraitAttribute("FeatureTitle", "Authentication")]
-        [Xunit.TraitAttribute("Description", "Customer login")]
-        public void CustomerLogin()
+        [Xunit.SkippableFactAttribute(DisplayName="Get customer info")]
+        [Xunit.TraitAttribute("FeatureTitle", "Customer")]
+        [Xunit.TraitAttribute("Description", "Get customer info")]
+        public void GetCustomerInfo()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Customer login", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Get customer info", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 3
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -102,26 +102,26 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.Given("a registered customer with random email", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 5
- testRunner.When("the customer logins", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("customer info is retrieved", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 6
  testRunner.Then("a successful response is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 7
- testRunner.And("a token is generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("customer data contains correct email", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Customer forgot password")]
-        [Xunit.TraitAttribute("FeatureTitle", "Authentication")]
-        [Xunit.TraitAttribute("Description", "Customer forgot password")]
-        public void CustomerForgotPassword()
+        [Xunit.SkippableFactAttribute(DisplayName="Update customer info")]
+        [Xunit.TraitAttribute("FeatureTitle", "Customer")]
+        [Xunit.TraitAttribute("Description", "Update customer info")]
+        public void UpdateCustomerInfo()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Customer forgot password", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Update customer info", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 9
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -136,28 +136,13 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.Given("a registered customer with random email", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 11
- testRunner.When("the customer calls forgot password feature", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("customer first name is updated to Jory", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 12
  testRunner.Then("a successful response is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 13
- testRunner.And("an email with reset password token is sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 14
- testRunner.When("customer reset password", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 15
- testRunner.Then("a successful response is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-#line 16
- testRunner.When("the customer logins", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 17
- testRunner.Then("a successful response is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-#line 18
- testRunner.And("a token is generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("customer data contains first name Jory", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -170,12 +155,12 @@ this.ScenarioInitialize(scenarioInfo);
             
             public FixtureData()
             {
-                AuthenticationFeature.FeatureSetup();
+                CustomerFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                AuthenticationFeature.FeatureTearDown();
+                CustomerFeature.FeatureTearDown();
             }
         }
     }

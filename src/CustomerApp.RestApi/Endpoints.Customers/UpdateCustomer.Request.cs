@@ -14,18 +14,13 @@ public sealed record UpdateCustomerRequest
     /// <example>2000-04-20</example>
     public DateOnly? Birthdate { get; }
 
-    /// <example>jorys.gaillard@gmail.com</example>
-    [EmailAddress]
-    public string? Email { get; }
-
     public AddressRequest? Address { get; }
 
-    public UpdateCustomerRequest(string? firstName = null, string? lastName = null, DateOnly? birthdate = null, string? email = null, AddressRequest? address = null)
+    public UpdateCustomerRequest(string? firstName = null, string? lastName = null, DateOnly? birthdate = null, AddressRequest? address = null)
     {
         FirstName = firstName;
         LastName = lastName;
         Birthdate = birthdate;
-        Email = email;
         Address = address;
     }
 
@@ -58,7 +53,6 @@ public sealed record UpdateCustomerRequest
             FirstName: FirstName,
             LastName: LastName,
             Birthdate: Birthdate,
-            Email: Email,
             Address: new(
                 Street: Address?.Street,
                 City: Address?.City,
