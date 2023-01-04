@@ -2,5 +2,5 @@
 
 internal static class Settings
 {
-    internal const string BaseAddress = "http://localhost:56724/";
+    internal const string BaseAddress = "http://localhost:55923/";
 }

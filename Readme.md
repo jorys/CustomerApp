@@ -57,6 +57,7 @@ Local SMTP server is accessible through http://localhost:3000
 ### How To - Run tests
 
 - Start app without debugging (Ctrl + F5)
+- Retrieve the port in swagger url and replace it into \tests\CustomerApp.Specs\Settings.cs
 - Run tests (Ctrl + R, A)
 
 ## Next features to be implemented

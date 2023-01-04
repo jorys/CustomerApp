@@ -16,24 +16,14 @@ namespace CustomerApp.Specs.StepDefinitions
         {
         }
 
-        [When("the customer logins")]
-        public async Task WhenCustomerLogins()
-        {
-            ScenarioContext[ContextKeys.Response] = await Client.PostAsync("api/login",
-                new StringContent($@"{{
-                  ""email"": ""{ScenarioContext[ContextKeys.Email]}"",
-                  ""password"": ""{ScenarioContext[ContextKeys.Password]}""
-                }}", Encoding.UTF8, "application/json"));
-        }
-
-        [When("the customer calls forgot password feature")]
+        [When("call forgot password on generated email")]
         public async Task WhenForgotPassword()
         {
             ScenarioContext[ContextKeys.Response] = await Client.PostAsync("api/forgot-password",
-                new StringContent($@"{{""email"": ""{ScenarioContext[ContextKeys.Email]}""}}", Encoding.UTF8, "application/json"));
+                ToJson($@"{{""email"": ""{ScenarioContext[ContextKeys.Email]}""}}"));
         }
 
-        [Then("a token is generated")]
+        [Then("JWT token is generated")]
         public async Task ThenTokenGenerated()
         {
             var response = (HttpResponseMessage)ScenarioContext[ContextKeys.Response];
@@ -60,18 +50,27 @@ namespace CustomerApp.Specs.StepDefinitions
             client.Disconnect(true);
         }
 
-        [When("customer reset password")]
-        public async Task WhenResetPassword()
+        [When($"use email token to reset password to {WordRegex}")]
+        public async Task WhenUseTokenToResetPassword(string password)
         {
-            var newPassword = "PassW0RD!!";
             ScenarioContext[ContextKeys.Response] = await Client.PostAsync("api/reset-password",
-                new StringContent($@"{{
+                ToJson($@"{{
                   ""email"": ""{ScenarioContext[ContextKeys.Email]}"",
                   ""token"": ""{ScenarioContext[ContextKeys.ResetPasswordToken]}"",
-                  ""password"": ""{newPassword}""
-                }}", Encoding.UTF8, "application/json"));
+                  ""password"": ""{password}""
+                }}"));
+        }
 
-            ScenarioContext[ContextKeys.Password] = newPassword;
+
+        [When($"use invalid token to reset password to {WordRegex}")]
+        public async Task WhenResetPasswordWithInvalidToken(string password)
+        {
+            ScenarioContext[ContextKeys.Response] = await Client.PostAsync("api/reset-password",
+                ToJson($@"{{
+                  ""email"": ""{ScenarioContext[ContextKeys.Email]}"",
+                  ""token"": ""invalid-token"",
+                  ""password"": ""{password}""
+                }}"));
         }
     }
 }

@@ -7,6 +7,9 @@ namespace CustomerApp.Specs.StepDefinitions;
 
 public class BaseSteps
 {
+    protected const string DefaultPassword = "P@sSw0rD!";
+    protected const string DefaultFirstName = "Jorys";
+    protected const string WordRegex = "([!-~]+)";
     protected readonly HttpClient Client = new() { BaseAddress = new Uri(Settings.BaseAddress) };
     protected readonly ScenarioContext ScenarioContext;
 
@@ -15,26 +18,41 @@ public class BaseSteps
         ScenarioContext = scenarioContext;
     }
 
-    [Given("a registered customer with random email")]
-    public async Task GivenRegisterCustomer()
+    [Given($"a registered customer {WordRegex}")]
+    public Task GivenRegisteredCustomerWithFirstName(string firstName)
+    {
+        return RegisterCustomer(firstName: firstName);
+    }
+
+    [Given($"a registered customer with password {WordRegex}")]
+    public Task GivenRegisteredCustomerWithpassword(string password)
+    {
+        return RegisterCustomer(password: password);
+    }
+
+    [Given("a registered customer")]
+    public Task GivenRegisteredCustomer()
+    {
+        return RegisterCustomer();
+    }
+
+    async Task RegisterCustomer(string password = DefaultPassword, string firstName = DefaultFirstName)
     {
         ScenarioContext[ContextKeys.Email] = GetRandomEmail();
-        ScenarioContext[ContextKeys.Password] = "P@sSw0rD!";
-
         ScenarioContext[ContextKeys.Response] = await Client.PostAsync("api/register",
-            new StringContent($@"{{
-                  ""firstName"": ""Jorys"",
+            ToJson($@"{{
+                  ""firstName"": ""{firstName}"",
                   ""lastName"": ""GAILLARD"",
                   ""birthdate"": ""2000-01-01"",
                   ""email"": ""{ScenarioContext[ContextKeys.Email]}"",
-                  ""password"": ""{ScenarioContext[ContextKeys.Password]}"",
+                  ""password"": ""{password}"",
                   ""address"": {{
                     ""street"": ""1 avenue du lac"",
                     ""city"": ""Annecy"",
                     ""postCode"": 74000,
                     ""country"": ""France""
                   }}
-                }}", Encoding.UTF8, "application/json"));
+                }}"));
 
         // Get JWT token
         var response = (HttpResponseMessage)ScenarioContext[ContextKeys.Response];
@@ -56,10 +74,32 @@ public class BaseSteps
         return $"{randomString}@gmail.com";
     }
 
-    [Then("a successful response is returned")]
+    [When($"customer logins with password {WordRegex}")]
+    public async Task WhenCustomerLogins(string password)
+    {
+        ScenarioContext[ContextKeys.Response] = await Client.PostAsync("api/login",
+            ToJson($@"{{
+                  ""email"": ""{ScenarioContext[ContextKeys.Email]}"",
+                  ""password"": ""{password}""
+                }}"));
+    }
+
+    [Then("successful response is returned")]
     public void ThenSuccessfulResponse()
     {
         var response = (HttpResponseMessage)ScenarioContext[ContextKeys.Response];
         response.IsSuccessStatusCode.Should().BeTrue();
+    }
+
+    [Then("fail response is returned")]
+    public void ThenFailResponse()
+    {
+        var response = (HttpResponseMessage)ScenarioContext[ContextKeys.Response];
+        response.IsSuccessStatusCode.Should().BeFalse();
+    }
+
+    protected static HttpContent ToJson(string content)
+    {
+        return new StringContent(content, Encoding.UTF8, "application/json");
     }
 }
