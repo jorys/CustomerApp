@@ -5,13 +5,13 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <ProjectGuid>01f214c7-ef43-41bf-97a8-a24ec2e87ab3</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
+    <DockerServiceUrl>http://localhost:5000/swagger</DockerServiceUrl>
     <DockerServiceName>customerapp.restapi</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="docker-compose.override.yml">
-      <DependentUpon>docker-compose.yml</DependentUpon>
-    </None>
+	  <None Include="docker-compose.override.yml">
+		  <DependentUpon>docker-compose.yml</DependentUpon>
+	  </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
   </ItemGroup>
