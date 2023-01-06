@@ -2,7 +2,6 @@ using FluentAssertions;
 using MailKit;
 using MailKit.Net.Imap;
 using MimeKit.Text;
-using System.Text;
 using System.Text.Json;
 using TechTalk.SpecFlow;
 

@@ -10,7 +10,8 @@ public class BaseSteps
     protected const string DefaultPassword = "P@sSw0rD!";
     protected const string DefaultFirstName = "Jorys";
     protected const string WordRegex = "([!-~]+)";
-    protected readonly HttpClient Client = new() { BaseAddress = new Uri(Settings.BaseAddress) };
+    protected static readonly HttpClient Client = new() { BaseAddress = new Uri("http://localhost:5000") };
+
     protected readonly ScenarioContext ScenarioContext;
 
     public BaseSteps(ScenarioContext scenarioContext)

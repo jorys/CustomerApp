@@ -1,4 +1,4 @@
-﻿namespace CustomerApp.Specs;
+﻿namespace CustomerApp.Specs.StepDefinitions;
 
 internal static class ContextKeys
 {
