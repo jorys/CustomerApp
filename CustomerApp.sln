@@ -22,7 +22,7 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4B5E4FD9-AE90-416D-A411-EB58562D8FAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerApp.Specs", "tests\CustomerApp.Specs\CustomerApp.Specs.csproj", "{BD79D15B-5546-40F7-8275-E6442DD748A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerApp.Specs", "tests\CustomerApp.Specs\CustomerApp.Specs.csproj", "{BD79D15B-5546-40F7-8275-E6442DD748A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

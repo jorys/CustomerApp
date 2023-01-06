@@ -34,12 +34,21 @@ This is an example of DDD-CQRS-Clean based architecture.
 
 ## How To
 
-### How To - Run locally
+### How To - Run in local
 
-- Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+#### Prerequisite
+
+Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+#### Run locally
+
+In Visual Studio
 - Open ./CustomerApp.sln with Visual Studio
 - Set "docker-compose" as startup project
-- Press Ctrl + F5, a browser will open on Swagger page
+- Press F5 (or Ctrl+F5 without debugging), a browser will open on Swagger page
+
+In VS Code:
+- Press F5 (or Ctrl+F5 without debugging), a browser will open on Swagger page
 
 ### How To - Handle unauthorized response
 
@@ -57,7 +66,7 @@ Local SMTP server is accessible through http://localhost:3000
 
 ### How To - Run tests
 
-- Start app without debugging (Ctrl + F5)
+- Start app without debugging (Ctrl+F5)
 - run command: 
 ```
 dotnet test customerApp.sln

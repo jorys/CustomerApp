@@ -3,7 +3,8 @@ version: '3.4'
 services:
   # App
   customerapp.restapi:
-    image: ${DOCKER_REGISTRY-}customerapprestapi
+    container_name: restapi
+    image: customerapprestapi
     build:
       context: .
       dockerfile: src/CustomerApp.RestApi/Dockerfile
