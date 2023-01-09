@@ -1,6 +1,5 @@
+using CustomerApp.Specs.StepDefinitions.Common;
 using FluentAssertions;
-using MailKit;
-using MailKit.Net.Imap;
 using MimeKit.Text;
 using System.Text.Json;
 using TechTalk.SpecFlow;
@@ -35,18 +34,17 @@ namespace CustomerApp.Specs.StepDefinitions
         [Then("an email with reset password token is sent")]
         public async Task ThenEmailWithResetTokenSent()
         {
-            using var client = new ImapClient();
-            client.Connect("localhost", 143);
-            client.Authenticate(userName: "", password: "");
+            var emailAddress = ScenarioContext[ContextKeys.Email].ToString();
+            emailAddress.Should().NotBeNullOrEmpty();
 
-            var inbox = client.Inbox;
-            inbox.Open(FolderAccess.ReadOnly);
+            using var client = new TestImapClient();
+            var emailFound = await client.GetFirstOrDefaultMessage(emailAddress, maxMessagesToFetch: 3);
+            emailFound.Should().NotBeNull();
 
-            var lastEmail = await inbox.GetMessageAsync(inbox.Count - 1);
-            lastEmail.To.ToString().Should().Be(ScenarioContext[ContextKeys.Email].ToString());
-            ScenarioContext[ContextKeys.ResetPasswordToken] = lastEmail.GetTextBody(TextFormat.Text).Split(' ').Last();
+            var token = emailFound.GetTextBody(TextFormat.Text).Split(' ').Last();
+            token.Should().NotBeEmpty();
 
-            client.Disconnect(true);
+            ScenarioContext[ContextKeys.ResetPasswordToken] = token;
         }
 
         [When($"use email token to reset password to {WordRegex}")]
@@ -59,7 +57,6 @@ namespace CustomerApp.Specs.StepDefinitions
                   ""password"": ""{password}""
                 }}"));
         }
-
 
         [When($"use invalid token to reset password to {WordRegex}")]
         public async Task WhenResetPasswordWithInvalidToken(string password)

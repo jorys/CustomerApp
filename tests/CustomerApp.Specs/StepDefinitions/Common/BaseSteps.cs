@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.Json;
 using TechTalk.SpecFlow;
 
-namespace CustomerApp.Specs.StepDefinitions;
+namespace CustomerApp.Specs.StepDefinitions.Common;
 
 public class BaseSteps
 {
