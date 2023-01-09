@@ -80,14 +80,14 @@ namespace CustomerApp.Specs.Features
             this.TestTearDown();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Get customer info")]
+        [Xunit.SkippableFactAttribute(DisplayName="Get customer info with JWT token")]
         [Xunit.TraitAttribute("FeatureTitle", "Customer")]
-        [Xunit.TraitAttribute("Description", "Get customer info")]
-        public void GetCustomerInfo()
+        [Xunit.TraitAttribute("Description", "Get customer info with JWT token")]
+        public void GetCustomerInfoWithJWTToken()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Get customer info", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Get customer info with JWT token", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 3
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -145,14 +145,14 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Update customer info")]
+        [Xunit.SkippableFactAttribute(DisplayName="Update customer info with JWT token")]
         [Xunit.TraitAttribute("FeatureTitle", "Customer")]
-        [Xunit.TraitAttribute("Description", "Update customer info")]
-        public void UpdateCustomerInfo()
+        [Xunit.TraitAttribute("Description", "Update customer info with JWT token")]
+        public void UpdateCustomerInfoWithJWTToken()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Update customer info", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Update customer info with JWT token", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 14
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -210,14 +210,14 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Update customer password")]
+        [Xunit.SkippableFactAttribute(DisplayName="Update customer password with JWT token")]
         [Xunit.TraitAttribute("FeatureTitle", "Customer")]
-        [Xunit.TraitAttribute("Description", "Update customer password")]
-        public void UpdateCustomerPassword()
+        [Xunit.TraitAttribute("Description", "Update customer password with JWT token")]
+        public void UpdateCustomerPasswordWithJWTToken()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Update customer password", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Update customer password with JWT token", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 25
 this.ScenarioInitialize(scenarioInfo);
 #line hidden

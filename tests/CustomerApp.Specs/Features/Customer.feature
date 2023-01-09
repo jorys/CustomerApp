@@ -1,6 +1,6 @@
 ﻿Feature: Customer
 
-Scenario: Get customer info
+Scenario: Get customer info with JWT token
 	Given a registered customer Jorys
 	When use JWT token to get info
 	Then successful response is returned
@@ -10,19 +10,19 @@ Scenario: Get customer info without JWT token
 	Given a registered customer Jorys
 	When get info without JWT token
 	Then unauthorized response is returned
-
-Scenario: Update customer info
+	
+Scenario: Update customer info with JWT token
 	Given a registered customer Jorys
 	When use JWT token to update first name to Jory
 	Then successful response is returned
 	And customer response contains first name Jory
-
+	
 Scenario: Update customer info without JWT token
 	Given a registered customer Jorys
 	When update first name to Jory without JWT token
 	Then unauthorized response is returned
 
-Scenario: Update customer password
+Scenario: Update customer password with JWT token
 	Given a registered customer with password P@sSw0rD!
 	When use JWT token to update password to Passw0rd!
 	Then successful response is returned
