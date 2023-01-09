@@ -17,7 +17,7 @@ namespace CustomerApp.Specs.StepDefinitions
         [When("call forgot password on generated email")]
         public async Task WhenForgotPassword()
         {
-            ScenarioContext[ContextKeys.Response] = await Client.PostAsync("api/forgot-password",
+            ScenarioContext[ContextKeys.Response] = await CreateClient().PostAsync("api/forgot-password",
                 ToJson($@"{{""email"": ""{ScenarioContext[ContextKeys.Email]}""}}"));
         }
 
@@ -35,22 +35,19 @@ namespace CustomerApp.Specs.StepDefinitions
         public async Task ThenEmailWithResetTokenSent()
         {
             var emailAddress = ScenarioContext[ContextKeys.Email].ToString();
-            emailAddress.Should().NotBeNullOrEmpty();
 
             using var client = new TestImapClient();
             var emailFound = await client.GetFirstOrDefaultMessage(emailAddress, maxMessagesToFetch: 3);
-            emailFound.Should().NotBeNull();
 
             var token = emailFound.GetTextBody(TextFormat.Text).Split(' ').Last();
             token.Should().NotBeEmpty();
-
             ScenarioContext[ContextKeys.ResetPasswordToken] = token;
         }
 
         [When($"use email token to reset password to {WordRegex}")]
         public async Task WhenUseTokenToResetPassword(string password)
         {
-            ScenarioContext[ContextKeys.Response] = await Client.PostAsync("api/reset-password",
+            ScenarioContext[ContextKeys.Response] = await CreateClient().PostAsync("api/reset-password",
                 ToJson($@"{{
                   ""email"": ""{ScenarioContext[ContextKeys.Email]}"",
                   ""token"": ""{ScenarioContext[ContextKeys.ResetPasswordToken]}"",
@@ -61,7 +58,7 @@ namespace CustomerApp.Specs.StepDefinitions
         [When($"use invalid token to reset password to {WordRegex}")]
         public async Task WhenResetPasswordWithInvalidToken(string password)
         {
-            ScenarioContext[ContextKeys.Response] = await Client.PostAsync("api/reset-password",
+            ScenarioContext[ContextKeys.Response] = await CreateClient().PostAsync("api/reset-password",
                 ToJson($@"{{
                   ""email"": ""{ScenarioContext[ContextKeys.Email]}"",
                   ""token"": ""invalid-token"",

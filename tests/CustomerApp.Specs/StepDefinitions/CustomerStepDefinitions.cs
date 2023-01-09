@@ -14,29 +14,51 @@ namespace CustomerApp.Specs.StepDefinitions
         {
         }
 
+        [When("get info without JWT token")]
+        public async Task WhenGetInfoWithoutToken()
+        {
+            ScenarioContext[ContextKeys.Response] = await CreateClient().GetAsync("api/customer");
+        }
+
         [When("use JWT token to get info")]
-        public async Task WhenGetInfo()
+        public async Task WhenGetInfoWithToken()
         {
             var jwtToken = ScenarioContext[ContextKeys.JwtToken].ToString();
-            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
-            ScenarioContext[ContextKeys.Response] = await Client.GetAsync("api/customer");
+            var client = CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+            ScenarioContext[ContextKeys.Response] = await client.GetAsync("api/customer");
+        }
+
+        [When($"update first name to {WordRegex} without JWT token")]
+        public async Task WhenUpdateFirstNameWithoutToken(string firstName)
+        {
+            ScenarioContext[ContextKeys.Response] = await CreateClient().PatchAsync("api/customer", ToJson($@"{{""firstName"": ""{firstName}""}}"));
         }
 
         [When($"use JWT token to update first name to {WordRegex}")]
-        public async Task WhenUpdateFirstName(string firstName)
+        public async Task WhenUpdateFirstNameWithToken(string firstName)
         {
             var jwtToken = ScenarioContext[ContextKeys.JwtToken].ToString();
-            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
-            ScenarioContext[ContextKeys.Response] = await Client.PatchAsync("api/customer",
+            var client = CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+            ScenarioContext[ContextKeys.Response] = await client.PatchAsync("api/customer",
                 ToJson($@"{{""firstName"": ""{firstName}""}}"));
         }
 
+        [When($"update password to {WordRegex} without JWT token")]
+        public async Task WhenUpdatePasswordWithoutToken(string password)
+        {
+            ScenarioContext[ContextKeys.Response] = await CreateClient().PutAsync("api/customer/password",
+                ToJson($@"{{""password"": ""{password}""}}"));
+        }
+
         [When($"use JWT token to update password to {WordRegex}")]
-        public async Task WhenUpdatePassword(string password)
+        public async Task WhenUpdatePasswordWithToken(string password)
         {
             var jwtToken = ScenarioContext[ContextKeys.JwtToken].ToString();
-            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
-            ScenarioContext[ContextKeys.Response] = await Client.PutAsync("api/customer/password",
+            var client = CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+            ScenarioContext[ContextKeys.Response] = await client.PutAsync("api/customer/password",
                 ToJson($@"{{""password"": ""{password}""}}"));
         }
 

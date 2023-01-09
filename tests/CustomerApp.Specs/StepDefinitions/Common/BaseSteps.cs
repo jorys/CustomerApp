@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 using TechTalk.SpecFlow;
@@ -10,13 +11,18 @@ public class BaseSteps
     protected const string DefaultPassword = "P@sSw0rD!";
     protected const string DefaultFirstName = "Jorys";
     protected const string WordRegex = "([!-~]+)";
-    protected static readonly HttpClient Client = new() { BaseAddress = new Uri("http://localhost:5000") };
+    const string _restApiBaseAddress = "http://localhost:5000";
 
     protected readonly ScenarioContext ScenarioContext;
 
     public BaseSteps(ScenarioContext scenarioContext)
     {
         ScenarioContext = scenarioContext;
+    }
+
+    protected static HttpClient CreateClient()
+    {
+        return new() { BaseAddress = new Uri(_restApiBaseAddress) };
     }
 
     [Given($"a registered customer {WordRegex}")]
@@ -40,7 +46,7 @@ public class BaseSteps
     async Task RegisterCustomer(string password = DefaultPassword, string firstName = DefaultFirstName)
     {
         ScenarioContext[ContextKeys.Email] = GetRandomEmail();
-        ScenarioContext[ContextKeys.Response] = await Client.PostAsync("api/register",
+        ScenarioContext[ContextKeys.Response] = await CreateClient().PostAsync("api/register",
             ToJson($@"{{
                   ""firstName"": ""{firstName}"",
                   ""lastName"": ""GAILLARD"",
@@ -78,7 +84,7 @@ public class BaseSteps
     [When($"customer logins with password {WordRegex}")]
     public async Task WhenCustomerLogins(string password)
     {
-        ScenarioContext[ContextKeys.Response] = await Client.PostAsync("api/login",
+        ScenarioContext[ContextKeys.Response] = await CreateClient().PostAsync("api/login",
             ToJson($@"{{
                   ""email"": ""{ScenarioContext[ContextKeys.Email]}"",
                   ""password"": ""{password}""
@@ -97,6 +103,13 @@ public class BaseSteps
     {
         var response = (HttpResponseMessage)ScenarioContext[ContextKeys.Response];
         response.IsSuccessStatusCode.Should().BeFalse();
+    }
+
+    [Then("unauthorized response is returned")]
+    public void ThenUnauthorizedResponse()
+    {
+        var response = (HttpResponseMessage)ScenarioContext[ContextKeys.Response];
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     protected static HttpContent ToJson(string content)
