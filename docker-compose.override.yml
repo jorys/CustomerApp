@@ -4,7 +4,3 @@ services:
   customerapp.restapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-    ports:
-      - "80"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro

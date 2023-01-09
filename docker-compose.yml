@@ -3,10 +3,13 @@ version: '3.4'
 services:
   # App
   customerapp.restapi:
-    image: ${DOCKER_REGISTRY-}customerapprestapi
+    container_name: restapi
+    image: customerapprestapi
     build:
       context: .
       dockerfile: src/CustomerApp.RestApi/Dockerfile
+    ports:
+    - 5000:80
   
   # Local SMTP server
   smtpdev:
@@ -15,6 +18,7 @@ services:
     ports: 
     - 3000:80
     - 2525:25
+    - 143:143
 
   # Mongo Database
   mongo:

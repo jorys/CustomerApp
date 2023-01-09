@@ -1,0 +1,16 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "docker-compose",
+            "type": "shell",
+            "command": "docker compose up --detach"
+        },
+        {
+            "label": "launch",
+            "dependsOn": "docker-compose",
+            "type": "shell",
+            "command": "start http://localhost:5000/swagger"
+        }
+    ]
+  }

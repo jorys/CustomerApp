@@ -82,9 +82,9 @@ public sealed class Customer : AggregateRoot<CustomerId>
         return this;
     }
 
-    public ErrorOr<Customer> Update(string? firstName, string? lastName, DateOnly? birthdate, string? email, string? street, string? city, int? postCode, string? country)
+    public ErrorOr<Customer> Update(string? firstName, string? lastName, DateOnly? birthdate, string? street, string? city, int? postCode, string? country)
     {
-        var errors = new List<Error>(8);
+        var errors = new List<Error>(7);
 
         if (firstName is not null)
         {
@@ -103,12 +103,6 @@ public sealed class Customer : AggregateRoot<CustomerId>
             var errorOrBirthdate = Birthdate.Create(birthdate.Value);
             if (errorOrBirthdate.IsError) errors.AddRange(errorOrBirthdate.Errors);
             else Birthdate = errorOrBirthdate.Value;
-        }
-        if (email is not null)
-        {
-            var errorOrEmail = Email.Create(email);
-            if (errorOrEmail.IsError) errors.AddRange(errorOrEmail.Errors);
-            else Email = errorOrEmail.Value;
         }
 
         var errorOrAddress = Address.With(street: street, city: city, postCode: postCode, country: country);

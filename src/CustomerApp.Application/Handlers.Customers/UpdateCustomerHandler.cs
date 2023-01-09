@@ -31,7 +31,6 @@ public sealed class UpdateCustomerHandler
             firstName: command.FirstName,
             lastName: command.LastName,
             birthdate: command.Birthdate,
-            email: command.Email,
             street: command.Address?.Street,
             city: command.Address?.City,
             postCode: command.Address?.PostCode,

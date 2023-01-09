@@ -5,7 +5,6 @@ public record UpdateCustomerCommand(
     string? FirstName,
     string? LastName,
     DateOnly? Birthdate,
-    string? Email,
     UpdateCustomerCommand.AddressCommand? Address)
 {
     public record AddressCommand(

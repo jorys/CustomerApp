@@ -1,7 +1,6 @@
 using CustomerApp.Application.Handlers.Authentication;
 using CustomerApp.RestApi.Common;
 using CustomerApp.RestApi.Endpoints.Authentication.Responses;
-using CustomerApp.RestApi.Endpoints.Customers.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;

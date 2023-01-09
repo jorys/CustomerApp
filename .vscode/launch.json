@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Docker .NET Core",
+            "type": "docker",
+            "request": "attach",
+            "platform": "netCore",
+            "sourceFileMap": {
+                "/": "${workspaceFolder}/src"
+            },
+            "preLaunchTask": "launch",
+            "containerName": "restapi",
+        }
+    ]
+}
