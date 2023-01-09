@@ -78,7 +78,3 @@ dotnet test customerApp.sln
 - Add example of choreography (through events)
 - External API call with circuit breaker example
 - Add code first BDD changesets (with Liquibase)
-
-In progress:
-- Fix Run all tests not working
-- Add tests on stocks
