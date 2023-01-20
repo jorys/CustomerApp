@@ -6,26 +6,31 @@ This is an example of DDD-CQRS-Clean based architecture.
 
 <img src="./docs/CleanArchitecture.jpg" alt="drawing" width="300"/>
 
-### Route behaviors
-
-- Authentication
-	- Register: allows to create a customer and generate a bearer token. Password is saved hashed (not decryptable) and salted
-	- Login: check email and password, generates a bearer token
-	- Forgot-password: send an email with reset-password token (see how-to - check mail section)
-	- Reset-password: allows to update password with reset-password token
-- Customer
-	- Get customer information
-	- Patch customer: only filled fields will be updated
-	- Put password: allows to update password
-	- Delete customer
-- Stock (concurrent access)
-	- Get stocks
-	- Add-Items: to increase an item quantity
-	- Remove-Items: to decrease an item quantity
-
-### Architecture details
+### Architecture
 
 <img src="./docs/ArchitectureDetails.jpg" alt="drawing" width="500"/>
+
+### Routes
+
+<img src="./docs/AuthenticationRoutes.jpg" alt="drawing" width="500"/>
+
+- **Register**: allows to create a customer and generate a bearer token. Password is saved hashed (not decryptable) and salted
+- **Login**: check email and password, generates a bearer token
+- **Forgot-password**: send an email with reset-password token (see how-to - check mail section)
+- **Reset-password**: allows to update password with reset-password token
+
+<img src="./docs/CustomerRoutes.jpg" alt="drawing" width="500"/>
+
+- **Get** customer information
+- **Patch customer**: only filled fields will be updated
+- **Put password**: allows to update password
+Delete customer
+
+<img src="./docs/StockRoutes.jpg" alt="drawing" width="500"/>
+
+- **Get** stocks
+- **Add-Items**: to increase an item quantity
+- **Remove-Items**: to decrease an item quantity
 
 ### Concurrent data access
 
